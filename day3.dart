@@ -9,14 +9,20 @@ class DataGrid {
   Point _location = new Point(0, 0);
   List<List<String>> _column = [];
 
-  get location => _location;
-  get hits => _hits;
+  Point get location => _location;
+
+  int get hits => _hits;
 
   bool canMove(Point by) {
-    return (_location.y + by.y) < _column.length ;
+    return (_location.y + by.y) < _column.length;
   }
 
-  void move(Point by) {}
+  void move(Point by) {
+    var newX = _location.x + by.x;
+    var sizeOfXGrid = _column[0].length;
+    _location = new Point(newX % sizeOfXGrid, _location.y + by.y);
+    if (_column[_location.y][_location.x] == tree) _hits++;
+  }
 
   void addRow(List<String> row) {
     _column.add(row);
@@ -32,7 +38,10 @@ void main() {
       .forEach((line) {
     grid.addRow(line.split(""));
   }).whenComplete(() {
-   
+    var moveBy = Point(3,1);
+    while (grid.canMove(moveBy)) {
+      grid.move(moveBy);
+    }
     print('trees hit: ${grid.hits}');
   });
 }
