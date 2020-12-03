@@ -1,0 +1,8 @@
+name: advent
+
+environment:
+  sdk: '>=2.6.0 <3.0.0'
+
+dependencies:
+  mockito: 4.1.1
+  test:
