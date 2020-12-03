@@ -4,7 +4,7 @@ import 'dart:io';
 void main() {
   List<int> numbers = [];
 
-  new File("puzzleInput.txt")
+  new File("inputData_day1.txt")
       .openRead()
       .map(utf8.decode)
       .transform(new LineSplitter())

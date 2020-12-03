@@ -43,7 +43,7 @@ class PositionRule with PasswordChecker {
 void main() {
   List<String> passes = [];
 
-  new File("day2.txt")
+  new File("inputData_day2.txt")
       .openRead()
       .map(utf8.decode)
       .transform(new LineSplitter())

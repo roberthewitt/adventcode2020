@@ -5,8 +5,11 @@
 pub get
 ```
 
-### execute the program
-
 ```shell script
-dart main
+# run the day you want
+dart day1.dart
+
+# test the day you want
+dart test test/day2_test.dart
+
 ```
