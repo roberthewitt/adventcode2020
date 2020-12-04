@@ -28,6 +28,7 @@ RuleProcessor processorFor(String key) {
     Height: new HeightProcessor(),
     HairColor: new HairColourProcessor(),
     EyeColor: new EyeColourProcessor(),
+    PassportID: new PassportIdProcessor(),
   };
   return processors[key] ?? alwaysPasses;
 }
@@ -54,6 +55,22 @@ class EyeColourProcessor with RuleProcessor {
     if (value.length != 3) return false;
     return validEyeColours.contains(value);
   }
+}
+
+class PassportIdProcessor with RuleProcessor {
+  @override
+  bool isValid(String value) {
+    if (value.length != 9) return false;
+    var intResult = int.tryParse(value);
+    if (intResult == null) return false;
+    if (intResult == 0) {
+      print ('received a passport with all zeros?');
+      return false;
+    }
+
+    return true;
+  }
+
 }
 
 class HeightCentimetersProcessor with RuleProcessor {

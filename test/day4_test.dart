@@ -340,6 +340,76 @@ void main() {
       });
     });
 
+    group('pid (Passport ID)', () {
+      var key = 'pid';
+      test('has less than 9 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "12345678"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('has more than 9 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "1234567890"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('exactly 9 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "123456789"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('exactly 9 digits with leading 0s', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "000000001"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('exactly 9 digits with all zeros', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "000000000"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('exactly 9 digits all of which are characters', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "aaaaaaaaa"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+    });
+
     group('hcl (Hair Color)', () {
       var key = 'hcl';
       test('has less than 7 digits', () {
