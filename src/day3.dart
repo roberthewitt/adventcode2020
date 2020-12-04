@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'utils.dart';
+import '../utils.dart';
 
 const tree = "#";
 
@@ -36,7 +36,7 @@ class DataGrid {
 
 void main() {
   var grid = new DataGrid();
-  readFileByLine("inputData_day3.txt", (line) {
+  readFileByLine("data/day3.txt", (line) {
     grid.addRow(line.split(""));
   }, onComplete: () {
     List<Point> moves = [

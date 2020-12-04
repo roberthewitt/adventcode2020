@@ -1,4 +1,4 @@
-import 'utils.dart';
+import '../utils.dart';
 
 mixin PasswordChecker {
   bool isValid(String password);
@@ -42,7 +42,7 @@ class PositionRule with PasswordChecker {
 void main() {
   List<String> passes = [];
 
-  readFileByLine("inputData_day2.txt", (element) {
+  readFileByLine("data/day2.txt", (element) {
     var rule = getPositionRule(element);
     var password = getPassword(element);
 

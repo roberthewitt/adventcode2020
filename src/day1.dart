@@ -1,9 +1,9 @@
-import 'utils.dart';
+import '../utils.dart';
 
 void main() {
   List<int> numbers = [];
 
-  readFileByLine("inputData_day1.txt", (element) {
+  readFileByLine("data/day1.txt", (element) {
     numbers.add(int.parse(element));
   }, onComplete: () {
     const input = 2020;

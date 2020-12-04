@@ -1,7 +1,7 @@
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../day2.dart';
+import '../src/day2.dart';
 
 class PasswordCheckerMock extends Mock with PasswordChecker {}
 

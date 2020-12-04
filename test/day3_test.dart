@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:test/test.dart';
 
-import '../day3.dart';
+import '../src/day3.dart';
 
 void main() {
   group('canMove', () {

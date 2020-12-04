@@ -1,4 +1,4 @@
-import 'utils.dart';
+import '../utils.dart';
 
 const BirthYear = "byr";
 const IssueYear = "iyr";
@@ -36,6 +36,7 @@ RuleProcessor processorFor(String key) {
 var validNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 var validLetters = ["a", "b", "c", "d", "e", "f"];
 var validCharacters = [...validLetters, ...validNumbers];
+
 class HairColourProcessor with RuleProcessor {
   @override
   bool isValid(String value) {
@@ -48,7 +49,9 @@ class HairColourProcessor with RuleProcessor {
     return characters.isEmpty;
   }
 }
+
 var validEyeColours = ['amb', 'blu', 'brn', 'gry', 'grn', "hzl", 'oth'];
+
 class EyeColourProcessor with RuleProcessor {
   @override
   bool isValid(String value) {
@@ -63,14 +66,10 @@ class PassportIdProcessor with RuleProcessor {
     if (value.length != 9) return false;
     var intResult = int.tryParse(value);
     if (intResult == null) return false;
-    if (intResult == 0) {
-      print ('received a passport with all zeros?');
-      return false;
-    }
+    if (intResult == 0) return false;
 
     return true;
   }
-
 }
 
 class HeightCentimetersProcessor with RuleProcessor {
@@ -105,9 +104,7 @@ class HeightProcessor with RuleProcessor {
 
   @override
   bool isValid(String value) =>
-      _rules
-          .where((rule) => rule.isValid(value))
-          .length > 0;
+      _rules.where((rule) => rule.isValid(value)).length > 0;
 }
 
 class BirthYearProcessor with RuleProcessor {
@@ -169,10 +166,7 @@ class PassportData {
 class PassportInfo {
   List<PassportData> items = [new PassportData()];
 
-  int get validCount =>
-      items
-          .where((a) => a.isValid)
-          .length;
+  int get validCount => items.where((a) => a.isValid).length;
 
   int get totalCount => items.length;
 }
@@ -208,7 +202,7 @@ Output newProcessor() {
 
 main() {
   var output = newProcessor();
-  readFileByLine("inputData_day4.txt", output.callback, onComplete: () {
+  readFileByLine("data/day4.txt", output.callback, onComplete: () {
     print('all passports: ${output.info.totalCount}');
     print('valid passports: ${output.info.validCount}');
   });

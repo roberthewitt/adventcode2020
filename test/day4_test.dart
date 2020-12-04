@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import '../day4.dart';
+import '../src/day4.dart';
 
 void main() {
   group('day 4 tests', () {
