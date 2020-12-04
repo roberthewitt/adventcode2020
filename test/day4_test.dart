@@ -112,6 +112,62 @@ void main() {
         expect(passport.isValid, equals(false));
       });
 
+      test('is below 1920', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          "byr": "1919"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is equal 1920', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          "byr": "1920"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('is above 2002', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          "byr": "2003"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is equal 2002', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          "byr": "2002"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
     });
   });
 

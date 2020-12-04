@@ -27,7 +27,15 @@ RuleProcessor processorFor(String key) {
 
 class BirthYearProcessor with RuleProcessor {
   @override
-  bool isValid(String value) => value.length == 4;
+  bool isValid(String value) {
+    if (value.length != 4)  return false;
+
+    var asInt = int.parse(value);
+    if (asInt < 1920) return false;
+    if (asInt > 2002) return false;
+
+    return true;
+  }
 }
 
 const requiredFields = [
