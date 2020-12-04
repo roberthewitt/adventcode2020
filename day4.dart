@@ -10,28 +10,25 @@ const PassportID = "pid";
 const CountryID = "cid";
 
 mixin RuleProcessor {
-  bool isValid(String);
+  bool isValid(String value);
 }
 
 class AlwaysPasses with RuleProcessor {
   @override
   bool isValid(String) => true;
 }
+
 var alwaysPasses = new AlwaysPasses();
+
 RuleProcessor processorFor(String key) {
-  var processors = {
-    BirthYear : new BirthYearProcessor()
-  };
+  var processors = {BirthYear: new BirthYearProcessor()};
   return processors[key] ?? alwaysPasses;
 }
 
 class BirthYearProcessor with RuleProcessor {
   @override
-  bool isValid(String) {
-    return false;
-  }
+  bool isValid(String value) => value.length == 4;
 }
-
 
 const requiredFields = [
   BirthYear,
@@ -46,6 +43,7 @@ const requiredFields = [
 class PassportData {
   Map<String, String> data = {};
   List<String> missingFields = [...requiredFields];
+
   bool get isValid => missingFields.length == 0;
 }
 

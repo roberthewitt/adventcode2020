@@ -98,6 +98,20 @@ void main() {
         expect(passport.isValid, equals(false));
       });
 
+      test('has more than 4 digits', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          "byr": "12345"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
     });
   });
 
