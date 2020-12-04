@@ -62,6 +62,45 @@ void main() {
     });
   });
 
+  group('new rules for part 2', () {
+    var validRules = {
+      "pid": "087499704",
+      "hgt": "74in",
+      "ecl": "grn",
+      "iyr": "2012",
+      "eyr": "2030",
+      "byr": "1980",
+      "hcl": "#623a2f",
+    };
+
+    test('rules that work rules', () {
+      var output = newProcessor();
+      validRules.entries
+          .map((e) => "${e.key}:${e.value}")
+          .forEach(output.callback);
+
+      var passport = output.info.items.first;
+      expect(passport.isValid, equals(true));
+    });
+
+    group('birth year - byr', () {
+      test('has less than 4 digits', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          "byr": "123"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+    });
+  });
+
   group('can determine if a passport is valid', () {
     test('contains all 7 required fields', () {
       var output = newProcessor();

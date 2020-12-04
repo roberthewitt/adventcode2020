@@ -9,6 +9,30 @@ const EyeColor = "ecl";
 const PassportID = "pid";
 const CountryID = "cid";
 
+mixin RuleProcessor {
+  bool isValid(String);
+}
+
+class AlwaysPasses with RuleProcessor {
+  @override
+  bool isValid(String) => true;
+}
+var alwaysPasses = new AlwaysPasses();
+RuleProcessor processorFor(String key) {
+  var processors = {
+    BirthYear : new BirthYearProcessor()
+  };
+  return processors[key] ?? alwaysPasses;
+}
+
+class BirthYearProcessor with RuleProcessor {
+  @override
+  bool isValid(String) {
+    return false;
+  }
+}
+
+
 const requiredFields = [
   BirthYear,
   IssueYear,
@@ -51,7 +75,12 @@ Output newProcessor() {
       args.map((e) => e.split(":")).map((e) => {e[0]: e[1]}).forEach((data) {
         passport.data.addAll(data);
       });
-      passport.missingFields.removeWhere(passport.data.keys.contains);
+      passport.missingFields.removeWhere((key) {
+        if (passport.data.containsKey(key)) {
+          return processorFor(key).isValid(passport.data[key]);
+        }
+        return false;
+      });
     }
   };
   return output;
