@@ -4,13 +4,40 @@ mixin PasswordChecker {
   bool isValid(String password);
 }
 
+mixin PasswordCheckerFactory {
+  PasswordChecker build(String code);
+}
+
+class Processor {
+  Function(String line) callback;
+  int Function(PasswordCheckerFactory factory) valid;
+}
+
+Processor newProcessor() {
+  List<String> lines = [];
+  var processor = Processor();
+
+  String getPassword(String text) => text.split(":")[1].trim();
+
+  processor.callback = lines.add;
+  processor.valid = (factory) =>
+      lines.where((v) => factory.build(v).isValid(getPassword(v))).length;
+
+  return processor;
+}
+
+void main() {
+  var processor = newProcessor();
+
+  readFileByLine("data/day2.txt", processor.callback, onComplete: () {
+    print('pt1 passwords that work: ${processor.valid(MaxMinFactory())}');
+    print('pt2 passwords that work: ${processor.valid(PositionFactory())}');
+  });
+}
+
 class MaxMinRule with PasswordChecker {
   String character;
-  int minimum;
-  int maximum;
-
-  @override
-  String toString() => 'PasswordRule($minimum-$maximum $character)';
+  int minimum, maximum;
 
   @override
   bool isValid(String password) {
@@ -25,65 +52,46 @@ class PositionRule with PasswordChecker {
   List<int> atPosition;
 
   @override
-  String toString() => 'PositionRule($atPosition $character)';
+  bool isValid(String password) =>
+      atPosition
+          .map((e) => e - 1)
+          .map((e) => password.split("")[e])
+          .where((char) => char == character)
+          .length ==
+      1;
+}
 
+class MaxMinFactory with PasswordCheckerFactory {
   @override
-  bool isValid(String password) {
-    var array = password.split("");
-    return atPosition
-            .map((e) => e - 1)
-            .map((e) => array[e])
-            .where((char) => char == character)
-            .length ==
-        1;
+  PasswordChecker build(String text) {
+    var rule = new MaxMinRule();
+
+    var ruleText = text.split(":")[0];
+    var bits = ruleText.split(" ");
+
+    rule.character = bits[1].trim();
+    var tolerances = bits[0].split("-");
+    rule.maximum = int.parse(tolerances[1]);
+    rule.minimum = int.parse(tolerances[0]);
+
+    return rule;
   }
 }
 
-void main() {
-  List<String> passes = [];
+class PositionFactory with PasswordCheckerFactory {
+  @override
+  PasswordChecker build(String text) {
+    var rule = PositionRule();
+    var ruleText = text.split(":")[0];
+    var bits = ruleText.split(" ");
 
-  readFileByLine("data/day2.txt", (element) {
-    var rule = getPositionRule(element);
-    var password = getPassword(element);
+    rule.character = bits[1].trim();
+    var tolerances = bits[0].split("-");
+    rule.atPosition = [
+      int.parse(tolerances[0]),
+      int.parse(tolerances[1]),
+    ];
 
-    if (passesRules(password, [rule])) {
-      passes.add(password);
-    }
-  }, onComplete: () {
-    print('passwords that work: ${passes.length}');
-  });
+    return rule;
+  }
 }
-
-MaxMinRule getMaxMinRule(String text) {
-  var rule = new MaxMinRule();
-
-  var ruleText = text.split(":")[0];
-  var bits = ruleText.split(" ");
-
-  rule.character = bits[1].trim();
-  var tolerances = bits[0].split("-");
-  rule.maximum = int.parse(tolerances[1]);
-  rule.minimum = int.parse(tolerances[0]);
-
-  return rule;
-}
-
-PositionRule getPositionRule(String text) {
-  var rule = PositionRule();
-  var ruleText = text.split(":")[0];
-  var bits = ruleText.split(" ");
-
-  rule.character = bits[1].trim();
-  var tolerances = bits[0].split("-");
-  rule.atPosition = [
-    int.parse(tolerances[0]),
-    int.parse(tolerances[1]),
-  ];
-
-  return rule;
-}
-
-String getPassword(String text) => text.split(":")[1].trim();
-
-bool passesRules(String text, List<PasswordChecker> rules) =>
-    rules.where((rule) => !rule.isValid(text)).length == 0;
