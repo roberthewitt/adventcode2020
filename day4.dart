@@ -25,6 +25,7 @@ const requiredFields = [
 
 
 
+
 main() {
   readFileByLine("inputData_day3.txt", (line) {
   }, onComplete: () {
