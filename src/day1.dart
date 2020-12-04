@@ -1,45 +1,53 @@
 import '../utils.dart';
 
 void main() {
-  List<int> numbers = [];
-
-  readFileByLine("data/day1.txt", (element) {
-    numbers.add(int.parse(element));
-  }, onComplete: () {
-    const input = 2020;
-    List<int> foundMatch = findTriple(numbers, input);
-
-    if (foundMatch.length > 0)
-      multiply(foundMatch);
-    else
-      print('no matching numbers for query of $input');
+  var processor = newProcessor();
+  readFileByLine("data/day1.txt", processor.callback, onComplete: () {
+    for(int i = 2; i < 6; i++) {
+      var startTime = DateTime.now();
+      var result = processor.findMatch(sum: 2020, size: i);
+      var endTime = DateTime.now();
+      print("$result :: duration(${endTime.millisecondsSinceEpoch - startTime.millisecondsSinceEpoch}ms)");
+    }
   });
 }
 
-void multiply(List<int> v) =>
-    print("multiplying: $v = ${v.reduce((a, b) => a * b)}");
-
-List<int> findMatch(List<int> others, List<int> source, int sum) {
-  List<int> result = [];
-  var sourceVal = source.reduce((a, b) => a + b);
-  var matching = others.where((e) => (e + sourceVal) == sum);
-  if (matching.isNotEmpty) {
-    result = [...source, matching.first];
-  }
-  return result;
+class Output {
+  Function(String line) callback;
+  String Function({int sum, int size}) findMatch;
 }
 
-List<int> findTriple(List<int> numbers, int sum) {
-  for (var i = 0; i < numbers.length; i++) {
-    var primary = numbers[i];
-    var innerNumbers = numbers.where((element) => element != primary).toList();
-    for (var j = 0; j < innerNumbers.length; j++) {
-      var secondary = numbers[j];
-      var finalNumbers = innerNumbers.where((e) => e != secondary).toList();
-      var match = findMatch(finalNumbers, [primary, secondary], sum);
-      if (match.length > 0) {
-        return match;
-      }
+Output newProcessor() {
+  List<int> data = [];
+  var output = new Output();
+  output.callback = (line) {
+    data.add((int.parse(line)));
+  };
+  output.findMatch = ({sum, size}) {
+    var result = find(data, size, sum, []);
+    if (result.isEmpty) {
+      return 'sum: $sum with size: $size: No Match';
+    } else {
+      return 'sum: $sum with size: $size: $result = ${result.reduce((a, b) => a * b)}';
+    }
+  };
+  return output;
+}
+
+List<int> find(List<int> source, int setSize, int sum, List<int> lockedIn) {
+  if (setSize == 1) {
+    var lockedInSum = lockedIn.reduce((a, b) => a + b);
+    var match = source.where((v) => v + lockedInSum == sum);
+    return match.isEmpty ? [] : [...lockedIn, match.first];
+  } else {
+    for (int i = 0; i < source.length; i++) {
+      int first = source[i];
+      var newLockedIn = [...lockedIn, first];
+      // give up this loop if we're already higher than sum
+      if (newLockedIn.fold(0, (a, b) => a + b) >= sum) continue;
+      List<int> others = source.sublist(i + 1);
+      var match = find(others, setSize - 1, sum, newLockedIn);
+      if (match.isNotEmpty) return match;
     }
   }
   return [];
