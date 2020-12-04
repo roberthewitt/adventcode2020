@@ -44,7 +44,11 @@ Output newProcessor() {
     if (line.trim().isEmpty) {
       output.info.items.add(new PassportData());
     } else {
-      
+      var args = line.split(" ");
+      var passport = output.info.items.last;
+      args.map((e) => e.split(":")).map((e) => {e[0]: e[1]}).forEach((data) {
+        passport.data.addAll(data);
+      });
     }
   };
   return output;
