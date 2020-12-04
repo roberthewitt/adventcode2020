@@ -43,4 +43,59 @@ void main() {
       });
     });
   });
+
+  group('edge casing', () {
+    test('handles leading spaces on input line', () {
+      var output = newProcessor();
+      output.callback(" a:a");
+
+      var passport = output.info.items.first;
+      expect(passport.data.keys.length, equals(1));
+    });
+
+    test('handles trailing spaces on input line', () {
+      var output = newProcessor();
+      output.callback("a:a ");
+
+      var passport = output.info.items.first;
+      expect(passport.data.keys.length, equals(1));
+    });
+  });
+
+  group('can determine if a passport is valid', () {
+    test('contains all 7 required fields', () {
+      var output = newProcessor();
+      output.callback("hcl:#ae17e1");
+      output.callback("iyr:2013");
+      output.callback("eyr:2024");
+      output.callback("ecl:brn ");
+      output.callback("pid:760753108");
+      output.callback("byr:1931");
+      output.callback("hgt:179cm");
+      var passport = output.info.items.first;
+      expect(passport.isValid, equals(true));
+    });
+
+    test('valid if we pass in all 8 options', () {
+      var output = newProcessor();
+      output.callback("hcl:#ae17e1");
+      output.callback("iyr:2013");
+      output.callback("eyr:2024");
+      output.callback("ecl:brn ");
+      output.callback("pid:760753108");
+      output.callback("byr:1931");
+      output.callback("hgt:179cm");
+      // optional 8th field
+      output.callback("cid:147");
+      var passport = output.info.items.first;
+      expect(passport.isValid, equals(true));
+    });
+
+    test('invalid valid if we are missing fields', () {
+      var output = newProcessor();
+      output.callback("hcl:#ae17e1");
+      var passport = output.info.items.first;
+      expect(passport.isValid, equals(false));
+    });
+  });
 }

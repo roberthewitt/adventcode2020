@@ -21,7 +21,8 @@ const requiredFields = [
 
 class PassportData {
   Map<String, String> data = {};
-  bool isValid = false;
+  List<String> missingFields = [...requiredFields];
+  bool get isValid => missingFields.length == 0;
 }
 
 class PassportInfo {
@@ -41,14 +42,16 @@ Output newProcessor() {
   var output = new Output();
   output.info = new PassportInfo();
   output.callback = (line) {
-    if (line.trim().isEmpty) {
+    var trimmedLine = line.trim();
+    if (trimmedLine.isEmpty) {
       output.info.items.add(new PassportData());
     } else {
-      var args = line.split(" ");
+      var args = trimmedLine.split(" ");
       var passport = output.info.items.last;
       args.map((e) => e.split(":")).map((e) => {e[0]: e[1]}).forEach((data) {
         passport.data.addAll(data);
       });
+      passport.missingFields.removeWhere(passport.data.keys.contains);
     }
   };
   return output;
