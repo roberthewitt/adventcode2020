@@ -27,6 +27,7 @@ RuleProcessor processorFor(String key) {
     ExpirationYear: new ExpirationYearProcessor(),
     Height: new HeightProcessor(),
     HairColor: new HairColourProcessor(),
+    EyeColor: new EyeColourProcessor(),
   };
   return processors[key] ?? alwaysPasses;
 }
@@ -34,7 +35,6 @@ RuleProcessor processorFor(String key) {
 var validNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 var validLetters = ["a", "b", "c", "d", "e", "f"];
 var validCharacters = [...validLetters, ...validNumbers];
-
 class HairColourProcessor with RuleProcessor {
   @override
   bool isValid(String value) {
@@ -46,7 +46,14 @@ class HairColourProcessor with RuleProcessor {
 
     return characters.isEmpty;
   }
-
+}
+var validEyeColours = ['amb', 'blu', 'brn', 'gry', 'grn', "hzl", 'oth'];
+class EyeColourProcessor with RuleProcessor {
+  @override
+  bool isValid(String value) {
+    if (value.length != 3) return false;
+    return validEyeColours.contains(value);
+  }
 }
 
 class HeightCentimetersProcessor with RuleProcessor {

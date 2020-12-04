@@ -290,6 +290,56 @@ void main() {
       });
     });
 
+    group('ecl (Eye Color)', () {
+      var key = 'ecl';
+      test('has less than 3 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "12"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('has more than 3 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "1234"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('any eye colour that is not valid', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "aaa"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      var validEyeColours = ['amb', 'blu', 'brn', 'gry', 'grn', "hzl", 'oth'];
+      validEyeColours.forEach((element) {
+        test('valid eye colour of $element', () {
+          var output = newProcessor();
+          var broken = {...validRules, key: element};
+          broken.entries
+              .map((e) => "${e.key}:${e.value}")
+              .forEach(output.callback);
+
+          var passport = output.info.items.first;
+          expect(passport.isValid, equals(true));
+        });
+      });
+    });
+
     group('hcl (Hair Color)', () {
       var key = 'hcl';
       test('has less than 7 digits', () {
@@ -368,7 +418,6 @@ void main() {
         var passport = output.info.items.first;
         expect(passport.isValid, equals(false));
       });
-
     });
 
     group('hgt (Height)', () {
@@ -487,7 +536,6 @@ void main() {
           expect(passport.isValid, equals(false));
         });
       });
-
     });
   });
 
