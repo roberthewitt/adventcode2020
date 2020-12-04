@@ -25,14 +25,50 @@ RuleProcessor processorFor(String key) {
     BirthYear: new BirthYearProcessor(),
     IssueYear: new IssueYearProcessor(),
     ExpirationYear: new ExpirationYearProcessor(),
+    Height: new HeightProcessor(),
   };
   return processors[key] ?? alwaysPasses;
+}
+
+class HeightCentimetersProcessor with RuleProcessor {
+  @override
+  bool isValid(String value) {
+    if (!value.endsWith('cm')) return false;
+    var number = int.parse(value.replaceAll('cm', ""));
+    if (number < 150) return false;
+    if (number > 193) return false;
+
+    return true;
+  }
+}
+
+class HeightInchesProcessor with RuleProcessor {
+  @override
+  bool isValid(String value) {
+    if (!value.endsWith('in')) return false;
+    var number = int.parse(value.replaceAll('in', ""));
+    if (number < 59) return false;
+    if (number > 76) return false;
+
+    return true;
+  }
+}
+
+class HeightProcessor with RuleProcessor {
+  List<RuleProcessor> _rules = [
+    new HeightCentimetersProcessor(),
+    new HeightInchesProcessor()
+  ];
+
+  @override
+  bool isValid(String value) =>
+      _rules.where((rule) => rule.isValid(value)).length > 0;
 }
 
 class BirthYearProcessor with RuleProcessor {
   @override
   bool isValid(String value) {
-    if (value.length != 4)  return false;
+    if (value.length != 4) return false;
 
     var asInt = int.parse(value);
     if (asInt < 1920) return false;
@@ -45,7 +81,7 @@ class BirthYearProcessor with RuleProcessor {
 class IssueYearProcessor with RuleProcessor {
   @override
   bool isValid(String value) {
-    if (value.length != 4)  return false;
+    if (value.length != 4) return false;
 
     var asInt = int.parse(value);
     if (asInt < 2010) return false;
@@ -58,7 +94,7 @@ class IssueYearProcessor with RuleProcessor {
 class ExpirationYearProcessor with RuleProcessor {
   @override
   bool isValid(String value) {
-    if (value.length != 4)  return false;
+    if (value.length != 4) return false;
 
     var asInt = int.parse(value);
     if (asInt < 2020) return false;
