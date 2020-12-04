@@ -24,6 +24,7 @@ RuleProcessor processorFor(String key) {
   var processors = {
     BirthYear: new BirthYearProcessor(),
     IssueYear: new IssueYearProcessor(),
+    ExpirationYear: new ExpirationYearProcessor(),
   };
   return processors[key] ?? alwaysPasses;
 }
@@ -49,6 +50,19 @@ class IssueYearProcessor with RuleProcessor {
     var asInt = int.parse(value);
     if (asInt < 2010) return false;
     if (asInt > 2020) return false;
+
+    return true;
+  }
+}
+
+class ExpirationYearProcessor with RuleProcessor {
+  @override
+  bool isValid(String value) {
+    if (value.length != 4)  return false;
+
+    var asInt = int.parse(value);
+    if (asInt < 2020) return false;
+    if (asInt > 2030) return false;
 
     return true;
   }

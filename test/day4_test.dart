@@ -171,7 +171,6 @@ void main() {
 
     });
 
-
     group('iyr (Issue Year)', () {
       var key = 'iyr';
       test('has less than 4 digits', (){
@@ -249,6 +248,94 @@ void main() {
         var broken = {
           ...validRules,
           key: "2020"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+    });
+
+    group('eyr (Expiration Year)', () {
+      var key = 'eyr';
+      test('has less than 4 digits', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "123"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('has more than 4 digits', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "12345"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is below 2020', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2019"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is equal 2020', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2020"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('is above 2030', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2031"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is equal 2030', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2030"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
