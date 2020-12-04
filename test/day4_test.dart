@@ -290,6 +290,87 @@ void main() {
       });
     });
 
+    group('hcl (Hair Color)', () {
+      var key = 'hcl';
+      test('has less than 7 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "#11111"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('has more than 7 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "#12345678"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('does not start with # but is 7 digits', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "1234567"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('numbers allowed 1', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "#123456"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('numbers allowed 2', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "#789012"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('letters allowed', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "#abcdef"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('any other letters break it', () {
+        var output = newProcessor();
+        var broken = {...validRules, key: "#12345g"};
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+    });
+
     group('hgt (Height)', () {
       var key = 'hgt';
 

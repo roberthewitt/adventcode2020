@@ -26,8 +26,27 @@ RuleProcessor processorFor(String key) {
     IssueYear: new IssueYearProcessor(),
     ExpirationYear: new ExpirationYearProcessor(),
     Height: new HeightProcessor(),
+    HairColor: new HairColourProcessor(),
   };
   return processors[key] ?? alwaysPasses;
+}
+
+var validNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+var validLetters = ["a", "b", "c", "d", "e", "f"];
+var validCharacters = [...validLetters, ...validNumbers];
+
+class HairColourProcessor with RuleProcessor {
+  @override
+  bool isValid(String value) {
+    if (!value.startsWith("#")) return false;
+    if (value.length != 7) return false;
+
+    var characters = value.substring(1, value.length).split("");
+    characters.removeWhere(validCharacters.contains);
+
+    return characters.isEmpty;
+  }
+
 }
 
 class HeightCentimetersProcessor with RuleProcessor {
@@ -62,7 +81,9 @@ class HeightProcessor with RuleProcessor {
 
   @override
   bool isValid(String value) =>
-      _rules.where((rule) => rule.isValid(value)).length > 0;
+      _rules
+          .where((rule) => rule.isValid(value))
+          .length > 0;
 }
 
 class BirthYearProcessor with RuleProcessor {
@@ -124,7 +145,10 @@ class PassportData {
 class PassportInfo {
   List<PassportData> items = [new PassportData()];
 
-  int get validCount => items.where((a) => a.isValid).length;
+  int get validCount =>
+      items
+          .where((a) => a.isValid)
+          .length;
 
   int get totalCount => items.length;
 }
