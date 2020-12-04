@@ -4,57 +4,46 @@ import '../utils.dart';
 
 const tree = "#";
 
-class DataGrid {
-  int _hits = 0;
-  Point _location = new Point(0, 0);
-  List<List<String>> _column = [];
+class Processor {
+  Function(String line) callback;
+  int Function(Point moveBy) hits;
+}
 
-  void reset() {
-    _hits = 0;
-    _location = new Point(0, 0);
-  }
+Processor newProcessor() {
+  List<List<String>> column = [];
 
-  Point get location => _location;
-
-  int get hits => _hits;
-
-  bool canMove(Point by) {
-    return (_location.y + by.y) < _column.length;
-  }
-
-  void move(Point by) {
-    var newX = _location.x + by.x;
-    var sizeOfXGrid = _column[0].length;
-    _location = new Point(newX % sizeOfXGrid, _location.y + by.y);
-    if (_column[_location.y][_location.x] == tree) _hits++;
-  }
-
-  void addRow(List<String> row) {
-    _column.add(row);
-  }
+  var processor = new Processor();
+  processor.callback = (line) {
+    column.add(line.split(""));
+  };
+  processor.hits = (moveBy) {
+    int hits = 0;
+    Point location = new Point(0, 0);
+    bool canMove(Point by) {
+      return (location.y + by.y) < column.length;
+    }
+    void doMove(Point by) {
+      var newX = location.x + by.x;
+      var sizeOfXGrid = column[0].length;
+      location = new Point(newX % sizeOfXGrid, location.y + by.y);
+      if (column[location.y][location.x] == tree) hits++;
+    }
+    while (canMove(moveBy)) doMove(moveBy);
+    return hits;
+  };
+  return processor;
 }
 
 void main() {
-  var grid = new DataGrid();
-  readFileByLine("data/day3.txt", (line) {
-    grid.addRow(line.split(""));
-  }, onComplete: () {
-    List<Point> moves = [
+  Processor processor = newProcessor();
+  readFileByLine("data/day3.txt", processor.callback, onComplete: () {
+    var result = [
       Point(1, 1),
       Point(3, 1),
       Point(5, 1),
       Point(7, 1),
       Point(1, 2),
-    ];
-
-    var result = moves.map((move) {
-      grid.reset();
-      while (grid.canMove(move)) {
-        grid.move(move);
-      }
-      print('trees hit using $move = ${grid.hits}');
-      return grid.hits;
-    }).reduce((a, b) => a * b);
+    ].map(processor.hits).reduce((a, b) => a * b);
 
     print('trees multiplied: $result');
   });
