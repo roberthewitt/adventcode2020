@@ -25,7 +25,7 @@ class PassportData {
 }
 
 class PassportInfo {
-  List<PassportData> items = [];
+  List<PassportData> items = [new PassportData()];
 
   int get validCount => items.where((a) => a.isValid).length;
 
@@ -40,7 +40,13 @@ class Output {
 Output newProcessor() {
   var output = new Output();
   output.info = new PassportInfo();
-  output.callback = (line) {};
+  output.callback = (line) {
+    if (line.trim().isEmpty) {
+      output.info.items.add(new PassportData());
+    } else {
+      
+    }
+  };
   return output;
 }
 
