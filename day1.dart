@@ -1,30 +1,27 @@
-import 'dart:convert';
-import 'dart:io';
+import 'utils.dart';
 
 void main() {
   List<int> numbers = [];
 
-  new File("inputData_day1.txt")
-      .openRead()
-      .map(utf8.decode)
-      .transform(new LineSplitter())
-      .forEach((element) {
+  readFileByLine("inputData_day1.txt", (element) {
     numbers.add(int.parse(element));
-  }).whenComplete(() {
-    List<int> foundMatch = findTriple(numbers, 2020);
+  }, onComplete: () {
+    const input = 2020;
+    List<int> foundMatch = findTriple(numbers, input);
 
-    multiply(foundMatch);
+    if (foundMatch.length > 0)
+      multiply(foundMatch);
+    else
+      print('no matching numbers for query of $input');
   });
 }
 
-void multiply(List<int> values) {
-  var result = values.reduce((previousValue, element) => previousValue * element);
-  print("multiplying: $values = $result");
-}
+void multiply(List<int> v) =>
+    print("multiplying: $v = ${v.reduce((a, b) => a * b)}");
 
 List<int> findMatch(List<int> others, List<int> source, int sum) {
-  List<int> result  = [];
-  var sourceVal = source.reduce((a,b) => a+b);
+  List<int> result = [];
+  var sourceVal = source.reduce((a, b) => a + b);
   var matching = others.where((e) => (e + sourceVal) == sum);
   if (matching.isNotEmpty) {
     result = [...source, matching.first];

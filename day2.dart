@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
+import 'utils.dart';
 
 mixin PasswordChecker {
   bool isValid(String password);
@@ -43,18 +42,14 @@ class PositionRule with PasswordChecker {
 void main() {
   List<String> passes = [];
 
-  new File("inputData_day2.txt")
-      .openRead()
-      .map(utf8.decode)
-      .transform(new LineSplitter())
-      .forEach((element) {
+  readFileByLine("inputData_day2.txt", (element) {
     var rule = getPositionRule(element);
     var password = getPassword(element);
 
     if (passesRules(password, [rule])) {
       passes.add(password);
     }
-  }).whenComplete(() {
+  }, onComplete: () {
     print('passwords that work: ${passes.length}');
   });
 }

@@ -1,6 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
+
+import 'utils.dart';
 
 const tree = "#";
 
@@ -9,7 +9,7 @@ class DataGrid {
   Point _location = new Point(0, 0);
   List<List<String>> _column = [];
 
-  void reset () {
+  void reset() {
     _hits = 0;
     _location = new Point(0, 0);
   }
@@ -36,13 +36,9 @@ class DataGrid {
 
 void main() {
   var grid = new DataGrid();
-  new File("inputData_day3.txt")
-      .openRead()
-      .map(utf8.decode)
-      .transform(new LineSplitter())
-      .forEach((line) {
+  readFileByLine("inputData_day3.txt", (line) {
     grid.addRow(line.split(""));
-  }).whenComplete(() {
+  }, onComplete: () {
     List<Point> moves = [
       Point(1, 1),
       Point(3, 1),
