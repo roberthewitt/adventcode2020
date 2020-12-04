@@ -83,12 +83,13 @@ void main() {
       expect(passport.isValid, equals(true));
     });
 
-    group('birth year - byr', () {
+    group('byr (Birth Year)', () {
+      var key = 'byr';
       test('has less than 4 digits', (){
         var output = newProcessor();
         var broken = {
           ...validRules,
-          "byr": "123"
+          key: "123"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
@@ -102,7 +103,7 @@ void main() {
         var output = newProcessor();
         var broken = {
           ...validRules,
-          "byr": "12345"
+          key: "12345"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
@@ -116,7 +117,7 @@ void main() {
         var output = newProcessor();
         var broken = {
           ...validRules,
-          "byr": "1919"
+          key: "1919"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
@@ -130,7 +131,7 @@ void main() {
         var output = newProcessor();
         var broken = {
           ...validRules,
-          "byr": "1920"
+          key: "1920"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
@@ -144,7 +145,7 @@ void main() {
         var output = newProcessor();
         var broken = {
           ...validRules,
-          "byr": "2003"
+          key: "2003"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
@@ -158,7 +159,7 @@ void main() {
         var output = newProcessor();
         var broken = {
           ...validRules,
-          "byr": "2002"
+          key: "2002"
         };
         broken.entries
             .map((e) => "${e.key}:${e.value}")
@@ -169,6 +170,96 @@ void main() {
       });
 
     });
+
+
+    group('iyr (Issue Year)', () {
+      var key = 'iyr';
+      test('has less than 4 digits', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "123"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('has more than 4 digits', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "12345"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is below 2010', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2009"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is equal 2010', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2010"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+      test('is above 2020', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2021"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(false));
+      });
+
+      test('is equal 2020', (){
+        var output = newProcessor();
+        var broken = {
+          ...validRules,
+          key: "2020"
+        };
+        broken.entries
+            .map((e) => "${e.key}:${e.value}")
+            .forEach(output.callback);
+
+        var passport = output.info.items.first;
+        expect(passport.isValid, equals(true));
+      });
+
+    });
+
   });
 
   group('can determine if a passport is valid', () {
