@@ -19,16 +19,16 @@ Processor newProcessor() {
   processor.hits = (moveBy) {
     int hits = 0;
     Point location = new Point(0, 0);
-    bool canMove(Point by) {
-      return (location.y + by.y) < column.length;
-    }
+    bool canMove(Point by) => (location.y + by.y) < column.length;
     void doMove(Point by) {
       var newX = location.x + by.x;
       var sizeOfXGrid = column[0].length;
       location = new Point(newX % sizeOfXGrid, location.y + by.y);
       if (column[location.y][location.x] == tree) hits++;
     }
+
     while (canMove(moveBy)) doMove(moveBy);
+
     return hits;
   };
   return processor;
