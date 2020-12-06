@@ -27,7 +27,17 @@ main() {
 
         expect(result, equals(1));
       });
-      test("", (){});
+
+      test("handles empty groups", (){
+        var processor = newProcessor();
+
+        var votes = ["","b"];
+        votes.forEach(processor.processLine);
+
+        var result = processor.pt2();
+
+        expect(result, equals(1));
+      });
     });
 
     group("part 1", () {

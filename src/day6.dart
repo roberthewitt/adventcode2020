@@ -8,6 +8,7 @@ class Processor {
 
 class Person {
   Iterable<String> votes = [];
+
   Person({this.votes = const []});
 }
 
@@ -20,8 +21,8 @@ class Group {
 
   int pt2() => people
       .map((e) => e.votes)
-      .fold<Iterable<String>>(
-          people[0].votes, (a, b) => a.where((v) => b.contains(v)))
+      .fold((people.isEmpty ? [] : people[0].votes),
+          (a, b) => a.where((v) => b.contains(v)))
       .length;
 }
 
