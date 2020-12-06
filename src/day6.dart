@@ -1,15 +1,5 @@
 import '../utils.dart';
 
-List<String> removeDuplicates(List<String> values) {
-  List<String> result = [];
-
-  values.forEach((element) {
-    if (!result.contains(element)) result.add(element);
-  });
-
-  return result;
-}
-
 class Processor {
   Function(String) processLine;
   int Function() pt1;
@@ -17,8 +7,7 @@ class Processor {
 }
 
 class Person {
-  List<String> votes = [];
-
+  Iterable<String> votes = [];
   Person({this.votes = const []});
 }
 
@@ -43,7 +32,7 @@ List<Group> getGroups(List<String> lines) {
     if (line.isEmpty) {
       groups.add(Group());
     } else {
-      groups.last.people.add(Person(votes: removeDuplicates(line.split(""))));
+      groups.last.people.add(Person(votes: Set.from(line.split(""))));
     }
   });
 
