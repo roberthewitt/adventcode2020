@@ -13,6 +13,7 @@ List<String> removeDuplicates(List<String> values) {
 class Processor {
   Function(String) processLine;
   int Function() pt1;
+  int Function() pt2;
 }
 
 class Person {
@@ -24,9 +25,15 @@ class Person {
 class Group {
   List<Person> people = [];
 
-  int uniqueVotes() => people
+  int pt1() => people
       .map((e) => e.votes)
       .fold([], (a, b) => Set.from([...a, ...b])).length;
+
+  int pt2() => people
+      .map((e) => e.votes)
+      .fold<Iterable<String>>(
+          people[0].votes, (a, b) => a.where((v) => b.contains(v)))
+      .length;
 }
 
 List<Group> getGroups(List<String> lines) {
@@ -49,8 +56,11 @@ Processor newProcessor() {
   List<String> lines = [];
   output.processLine = lines.add;
 
-  output.pt1 = () =>
-      getGroups(lines).map((e) => e.uniqueVotes()).fold(0, (a, b) => a + b);
+  output.pt1 =
+      () => getGroups(lines).map((e) => e.pt1()).fold(0, (a, b) => a + b);
+
+  output.pt2 =
+      () => getGroups(lines).map((e) => e.pt2()).fold(0, (a, b) => a + b);
 
   return output;
 }
@@ -65,13 +75,10 @@ main() {
   var processor_pt1 = newProcessor();
   readFileByLine("data/day6.txt", processor_pt1.processLine, onComplete: () {
     print('<< part 1 >> result: ${processor_pt1.pt1()}');
-    // 1601 is too low and wrong
-    // 1263 and too low
-    // 1504 too low
   });
 
-  // var processor_pt2 = newProcessor();
-  // readFileByLine("data/day6.txt", processor_pt2.processLine, onComplete: () {
-  //   print('<< part 2 >> my seat: ${processor_pt2.mySeat()}');
-  // });
+  var processor_pt2 = newProcessor();
+  readFileByLine("data/day6.txt", processor_pt2.processLine, onComplete: () {
+    print('<< part 2 >> result: ${processor_pt2.pt2()}');
+  });
 }
