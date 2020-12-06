@@ -42,9 +42,9 @@ Processor newProcessor() {
     List<Point<int>> missingSeats = [];
     void hasMissing(String columnId, List<String> seatIds) {
       for (int i = 1; i < seatIds.length - 1; i++) {
-        if (seatIds[i - 1] == "O" &&
+        if (seatIds[i - 1] == "-" &&
             seatIds[i] == "X" &&
-            seatIds[i + 1] == "O") {
+            seatIds[i + 1] == "-") {
           missingSeats.add(Point(i, int.parse(columnId)));
         }
       }
@@ -55,13 +55,13 @@ Processor newProcessor() {
       if (data[seat.y] == null)
         data[seat.y] = ["X", "X", "X", "X", "X", "X", "X", "X"];
       List<String> row = data[seat.y];
-      row[seat.x] = "O";
+      row[seat.x] = "-";
     });
     var sortedData = data.entries.toList();
     sortedData.sort((a, b) {
       if (a.key == b.key) return 0;
-      if (a.key < b.key) return 1;
-      return -1;
+      if (a.key < b.key) return -1;
+      return 1;
     });
     sortedData.forEach((rowData) {
       var fixedSizeId = rowData.key.toString();
