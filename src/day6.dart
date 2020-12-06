@@ -12,7 +12,7 @@ List<String> removeDuplicates(List<String> values) {
 
 class Processor {
   Function(String) processLine;
-  int Function() yes;
+  int Function() pt1;
 }
 
 class Person {
@@ -29,25 +29,28 @@ class Group {
       .fold([], (a, b) => Set.from([...a, ...b])).length;
 }
 
+List<Group> getGroups(List<String> lines) {
+  List<Group> groups = [Group()];
+
+  lines.forEach((line) {
+    if (line.isEmpty) {
+      groups.add(Group());
+    } else {
+      groups.last.people.add(Person(votes: removeDuplicates(line.split(""))));
+    }
+  });
+
+  return groups;
+}
+
 Processor newProcessor() {
   var output = Processor();
 
   List<String> lines = [];
   output.processLine = lines.add;
 
-  output.yes = () {
-    List<Group> groups = [Group()];
-
-    lines.forEach((line) {
-      if (line.isEmpty) {
-        groups.add(Group());
-      } else {
-        groups.last.people.add(Person(votes: removeDuplicates(line.split(""))));
-      }
-    });
-
-    return groups.map((e) => e.uniqueVotes()).fold(0, (a, b) => a + b);
-  };
+  output.pt1 = () =>
+      getGroups(lines).map((e) => e.uniqueVotes()).fold(0, (a, b) => a + b);
 
   return output;
 }
@@ -56,12 +59,12 @@ main() {
   var processor_testData = newProcessor();
   readFileByLine("data/day6_testData.txt", processor_testData.processLine,
       onComplete: () {
-    print('<< test data result: ${processor_testData.yes()}');
+    print('<< test data result: ${processor_testData.pt1()}');
   });
 
   var processor_pt1 = newProcessor();
   readFileByLine("data/day6.txt", processor_pt1.processLine, onComplete: () {
-    print('<< part 1 >> result: ${processor_pt1.yes()}');
+    print('<< part 1 >> result: ${processor_pt1.pt1()}');
     // 1601 is too low and wrong
     // 1263 and too low
     // 1504 too low

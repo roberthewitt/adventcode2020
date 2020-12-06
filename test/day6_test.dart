@@ -15,7 +15,7 @@ main() {
         var votes = ["a"];
         votes.forEach(processor.processLine);
 
-        var result = processor.yes();
+        var result = processor.pt1();
 
         expect(result, equals(1));
       });
@@ -26,7 +26,7 @@ main() {
         var votes = ["aaaa",];
         votes.forEach(processor.processLine);
 
-        var result = processor.yes();
+        var result = processor.pt1();
 
         expect(result, equals(1));
       });
@@ -37,7 +37,7 @@ main() {
         var votes = ["a","a", "", "a"];
         votes.forEach(processor.processLine);
 
-        var result = processor.yes();
+        var result = processor.pt1();
 
         expect(result, equals(2));
       });
@@ -48,7 +48,7 @@ main() {
         var votes = ["abc"];
         votes.forEach(processor.processLine);
 
-        var result = processor.yes();
+        var result = processor.pt1();
 
         expect(result, equals(3));
       });
