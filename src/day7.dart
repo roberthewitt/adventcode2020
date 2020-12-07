@@ -20,11 +20,11 @@ Processor newProcessor() {
   output.callback = lines.add;
 
   bool bagContainsBag(Map<String, Iterable<BagContains>> bag, String search, Iterable<BagContains> contents) =>
-      contents.any((content) => content.bagName == search) ||
+      contents.map((c) => c.bagName).any((name) => name == search) ||
       contents.any((element) => bagContainsBag(bag, search, bag[element.bagName]));
 
-  int bagSize(Iterable<BagContains> contents, Map<String, Iterable<BagContains>> data) =>
-      contents.fold<int>(1, (old, bagContain) => old + bagContain.quantity * bagSize(data[bagContain.bagName], data));
+  int bagSize(Iterable<BagContains> contents, Map<String, Iterable<BagContains>> data) => contents.fold<int>(
+      1, (count, bagContain) => count + bagContain.quantity * bagSize(data[bagContain.bagName], data));
 
   Map<String, Iterable<BagContains>> Function() bags =
       () => lines.fold<Map<String, Iterable<BagContains>>>({}, (acc, line) {
