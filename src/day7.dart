@@ -48,31 +48,21 @@ Processor newProcessor() {
         .length;
   };
 
-  int fn2(String search, Map<String, Iterable<BagContains>> data) =>
-      data.entries.fold<int>(0,
-          (old, entry) => old + bagSize(entry.value, data, bagName: entry.key));
-  output.pt2 = (search) => fn2(search, bags());
+  output.pt2 = (search) {
+    var data = bags();
+    return bagSize(data[search], data) -1;
+  };
 
   return output;
 }
 
-int bagSize(
-    Iterable<BagContains> contents, Map<String, Iterable<BagContains>> data,
-    {String bagName: ""}) {
-  int size = 0;
-  if (contents.length == 0) {
-    size = 1;
-  } else {
-    size = contents.fold<int>(
-        0,
+int bagSize(Iterable<BagContains> contents,
+        Map<String, Iterable<BagContains>> data) =>
+    contents.fold<int>(
+        1,
         (old, bagContain) =>
-            bagContain.quantity *
-            bagSize(data[bagContain.bagName], data,
-                bagName: bagContain.bagName));
-  }
-  print("$bagName : $size");
-  return size;
-}
+            old +
+            bagContain.quantity * bagSize(data[bagContain.bagName], data));
 
 main() {
   var processor_testData = newProcessor();
