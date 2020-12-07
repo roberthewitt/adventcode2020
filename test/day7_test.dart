@@ -6,15 +6,17 @@ main() {
   group("day 7", () {
 
     group("part 1", () {
-      test("foo", () {
+      test("can process line", () {
         var processor = newProcessor();
 
-        var lines = ["a"];
+        var lines = ["light red bags contain 1 bright white bag, 2 muted yellow bags."];
         lines.forEach(processor.callback);
 
-        var result = processor.pt1();
+        var bright_white = processor.pt1("bright white");
+        var muted_yellow = processor.pt1("muted yellow");
 
-        expect(result, equals(0));
+        expect(bright_white, equals(1));
+        expect(muted_yellow, equals(1));
       });
     });
 

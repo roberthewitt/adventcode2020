@@ -2,7 +2,7 @@ import '../utils.dart';
 
 class Processor {
   Function(String) callback;
-  int Function() pt1;
+  int Function(String bagType) pt1;
   int Function() pt2;
 }
 
@@ -12,7 +12,7 @@ Processor newProcessor() {
   List<String> lines = [];
   output.callback = lines.add;
 
-  output.pt1 = () => 0;
+  output.pt1 = (bagType) => 0;
 
   output.pt2 = () => 0;
 
@@ -23,12 +23,12 @@ main() {
   var processor_testData = newProcessor();
   readFileByLine("data/day7_testData.txt", processor_testData.callback,
       onComplete: () {
-    print('<< test data result: ${processor_testData.pt1()}');
+    print('<< test data result: ${processor_testData.pt1("shiny gold")}');
   });
 
   var processor_pt1 = newProcessor();
   readFileByLine("data/day7.txt", processor_pt1.callback, onComplete: () {
-    print('<< part 1 >> result: ${processor_pt1.pt1()}');
+    print('<< part 1 >> result: ${processor_pt1.pt1("shiny gold")}');
   });
 
   var processor_pt2 = newProcessor();
