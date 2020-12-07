@@ -5,8 +5,6 @@ import '../src/day7.dart';
 main() {
   group("day 7", () {
 
-
-
     group("part 1", () {
       test("gold", () {
         var processor = newProcessor();
@@ -90,7 +88,7 @@ main() {
         var lines = ["a", "b", "c"];
         lines.forEach(processor.callback);
 
-        var result = processor.pt2();
+        var result = processor.pt2("foo bar");
 
         expect(result, equals(0));
       });
