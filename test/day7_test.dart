@@ -4,7 +4,6 @@ import '../src/day7.dart';
 
 main() {
   group("day 7", () {
-
     group("part 1", () {
       test("gold", () {
         var processor = newProcessor();
@@ -16,10 +15,12 @@ main() {
 
         expect(result, equals(1));
       });
-  test("can find bag in first element", () {
+      test("can find bag in first element", () {
         var processor = newProcessor();
 
-        var lines = ["light red bags contain 1 bright white bag, 2 muted yellow bags."];
+        var lines = [
+          "light red bags contain 1 bright white bag, 2 muted yellow bags."
+        ];
         lines.forEach(processor.callback);
 
         var result = processor.pt1("bright white");
@@ -30,7 +31,9 @@ main() {
       test("can find bag in 2nd element", () {
         var processor = newProcessor();
 
-        var lines = ["light red bags contain 1 bright white bag, 2 muted yellow bags."];
+        var lines = [
+          "light red bags contain 1 bright white bag, 2 muted yellow bags."
+        ];
         lines.forEach(processor.callback);
 
         var result = processor.pt1("muted yellow");
@@ -85,14 +88,21 @@ main() {
       test("foo", () {
         var processor = newProcessor();
 
-        var lines = ["a", "b", "c"];
+        var lines = [
+          "shiny gold bags contain 2 dark red bags.",
+          "dark red bags contain 2 dark orange bags.",
+          "dark orange bags contain 2 dark yellow bags.",
+          "dark yellow bags contain 2 dark green bags.",
+          "dark green bags contain 2 dark blue bags.",
+          "dark blue bags contain 2 dark violet bags.",
+          "dark violet bags contain no other bags."
+        ];
         lines.forEach(processor.callback);
 
-        var result = processor.pt2("foo bar");
+        var result = processor.pt2("shiny gold");
 
-        expect(result, equals(0));
+        expect(result, equals(126));
       });
     });
-
   });
 }
