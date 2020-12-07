@@ -65,11 +65,6 @@ main() {
     print('<< part 1 >> result: ${processor_pt1.pt1("shiny gold")}');
   });
 
-  var processor_testData2 = newProcessor();
-  readFileByLine("data/day7_testData2.txt", processor_testData2.callback, onComplete: () {
-    print('<< test data PART 2 result: ${processor_testData2.pt2("shiny gold")}');
-  });
-
   var processor_pt2 = newProcessor();
   readFileByLine("data/day7.txt", processor_pt2.callback, onComplete: () {
     print('<< part 2 >> result: ${processor_pt2.pt2("shiny gold")}');
