@@ -6,13 +6,60 @@ class Processor {
   int Function() pt2;
 }
 
+class Instruction {
+  String type;
+  int jumpBy;
+  int increment;
+  bool executed = false;
+
+  Instruction(this.type, {this.jumpBy = 1, this.increment = 0});
+
+  @override
+  String toString() {
+    return 'Instruction{type: $type, jumpBy: $jumpBy, increment: $increment}';
+  }
+}
+
 Processor newProcessor() {
   var output = Processor();
 
-  List<String> lines = [];
-  output.callback = lines.add;
+  List<Instruction> instructions = [];
+  var transform = (String line) {
+    if (line.trim().length == 0) return;
+    var type = line.substring(0, 3);
+    var value = int.parse(line.substring(3, line.length));
+    int jumpBy = 1;
+    int increment = 0;
+    switch (type) {
+      case "acc":
+        {
+          increment = value;
+          break;
+        }
+      case "jmp":
+        {
+          jumpBy = value;
+        }
+    }
 
-  output.pt1 = () => 0;
+    instructions.add(Instruction(type, increment: increment, jumpBy: jumpBy));
+  };
+  output.callback = transform;
+
+  output.pt1 = () {
+    int index = 0;
+    int result = 0;
+    Instruction current = instructions[index];
+
+    while (!current.executed) {
+      current.executed = true;
+      result += current.increment;
+      index += current.jumpBy;
+      if (index < instructions.length) current = instructions[index];
+    }
+
+    return result;
+  };
 
   output.pt2 = () => 0;
 
