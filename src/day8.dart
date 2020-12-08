@@ -6,115 +6,60 @@ class Processor {
   int Function() pt2;
 }
 
-class Instruction {
-  String type;
-  int value;
-  bool executed = false;
-
-  Instruction(this.type, this.value);
-}
-
-class Operation {
-  int jumpBy, increment;
-
-  Operation({this.jumpBy, this.increment});
-}
-
 Processor newProcessor() {
   var output = Processor();
 
-  List<Instruction> instructions = [];
+  List<String> instr = [];
+  output.callback = instr.add;
 
-  output.callback = (String line) {
-    if (line.trim().length == 0) return;
-    var type = line.substring(0, 3);
-    var value = int.parse(line.substring(3, line.length));
+  int part1(List<int> executed, {int index: 0, int result: 0}) {
+    if (executed.contains(index)) return result;
+    if (index == instr.length) return result;
 
-    instructions.add(Instruction(type, value));
-  };
+    var operation = instr[index].split(" ");
+    var opcode = operation[0];
+    var value = int.parse(operation[1]);
 
-  Operation getOrder(Instruction i) {
-    int jumpBy = 1, increment = 0;
-
-    switch (i.type) {
-      case "acc":
-        {
-          increment = i.value;
-          break;
-        }
-      case "jmp":
-        {
-          jumpBy = i.value;
-          break;
-        }
-    }
-    return Operation(jumpBy: jumpBy, increment: increment);
+    if (opcode == 'jmp') return part1(executed += [index], index: index + value, result: result);
+    if (opcode == 'nop') return part1(executed += [index], index: index + 1, result: result);
+    if (opcode == 'acc') return part1(executed += [index], index: index + 1, result: result + value);
+    throw ArgumentError("unknown opcode for #$index -> ${operation}");
   }
 
-  output.pt1 = () {
-    int index = 0;
-    int result = 0;
-    Instruction current = instructions[index];
-
-    while (!current.executed) {
-      current.executed = true;
-      var order = getOrder(current);
-      result += order.increment;
-      index += order.jumpBy;
-      if (index < instructions.length) current = instructions[index];
-    }
-
-    return result;
-  };
-
-  output.pt2 = () {
-    int result = 0;
-    int modifyInstructionEncounter = 0;
-    int instructionEncounter = 0;
-    int maxTries = instructions.where((i) => ["jmp", "nop"].contains(i.type)).length;
+  int part2(List<int> executed, {int index: 0, int result: 0, int modOpCode: 1, int opCodeSeen: 0}) {
     bool success = false;
-
-    for (int i = 0, index = 0; i < maxTries && !success; i++,) {
-      modifyInstructionEncounter++;
-      instructionEncounter = 0;
-      result = 0;
-      index = 0;
-      Instruction current = instructions[0];
-      instructions.forEach((instr) {
-        instr.executed = false;
-      });
-
-      while (!current.executed) {
-        current.executed = true;
-
-        if (["jmp", "nop"].contains(current.type)) instructionEncounter++;
-        Instruction upFor = current;
-        if (modifyInstructionEncounter == instructionEncounter) {
-          switch (current.type) {
-            case "jmp":
-              {
-                upFor = Instruction("nop", upFor.value);
-                break;
-              }
-            case "nop":
-              {
-                upFor = Instruction("jmp", upFor.value);
-                break;
-              }
-          }
-        }
-        var operation = getOrder(upFor);
-
-        result += operation.increment;
-        index += operation.jumpBy;
-        if (index < instructions.length) current = instructions[index];
-        if (index >= instructions.length) success = true;
+    int opcodeLineIndex = 0;
+    do {
+      executed += [index];
+      if (index >= instr.length) {
+        print("succeeded on modding opcode #${modOpCode} at line#${opcodeLineIndex}");
+        success = true;
+        break;
       }
-    }
+      var operation = instr[index].split(" ");
+      var opcode = operation[0];
+      var value = int.parse(operation[1]);
+      if (["jmp", "nop"].contains(opcode)) {
+        opCodeSeen++;
+        if (opCodeSeen == modOpCode) {
+          opcodeLineIndex = index;
+          opcode = opcode == "jmp" ? "nop" : "jmp";
+        }
+      }
 
-    if (!success) print("didn't find a valid swap :( ");
+      if (opcode == "jmp") index += value;
+      if (opcode == "nop") index++;
+      if (opcode == "acc") index++;
+      if (opcode == "acc") result += value;
+      if (!['jmp', 'nop', 'acc'].contains(opcode)) throw ArgumentError("unknown opcode for #$index -> ${operation}");
+    } while (!executed.contains(index));
+
+    if (!success) return part2([], modOpCode: modOpCode + 1);
     return result;
-  };
+  }
+
+  output.pt1 = () => part1([]);
+  output.pt2 = () => part2([]);
 
   return output;
 }

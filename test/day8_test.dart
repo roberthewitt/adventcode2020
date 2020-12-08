@@ -5,6 +5,16 @@ import '../src/day8.dart';
 main() {
   group("day 8", () {
     group("part 1", () {
+
+      test("informs of an error of parsing opcode", () {
+        var processor = newProcessor();
+
+        var lines = ["abc 4"];
+        lines.forEach(processor.callback);
+
+        expect(() => processor.pt1(), throwsArgumentError);
+      });
+
       test("no-op means do nothing", () {
         var processor = newProcessor();
 
@@ -105,6 +115,15 @@ main() {
         expect(result, equals(10));
       });
 
+      test("informs of an error of parsing opcode", () {
+        var processor = newProcessor();
+
+        var lines = ["abc 4"];
+        lines.forEach(processor.callback);
+
+        expect(() => processor.pt2(), throwsArgumentError);
+      });
+
       test("replaces the first nop with a jump", () {
         var processor = newProcessor();
 
@@ -143,7 +162,7 @@ main() {
         var lines = [
           "acc 5",
           "nop -1",
-          "jump -2",
+          "jmp -2",
           "acc 2",
         ];
         lines.forEach(processor.callback);
