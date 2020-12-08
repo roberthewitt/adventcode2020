@@ -9,52 +9,53 @@ class Processor {
 Processor newProcessor() {
   var output = Processor();
 
-  List<String> instr = [];
-  output.callback = instr.add;
+  List<List<String>> instr = [];
+  output.callback = (line) => instr.add(line.split(" "));
 
   int part1(List<int> executed, {int index: 0, int result: 0}) {
     if (executed.contains(index)) return result;
     if (index == instr.length) return result;
 
-    var operation = instr[index].split(" ");
+    var operation = instr[index];
     var opcode = operation[0];
-    var value = int.parse(operation[1]);
 
-    if (opcode == 'jmp') return part1(executed += [index], index: index + value, result: result);
+    if (opcode == 'jmp') return part1(executed += [index], index: index + int.parse(operation[1]), result: result);
     if (opcode == 'nop') return part1(executed += [index], index: index + 1, result: result);
-    if (opcode == 'acc') return part1(executed += [index], index: index + 1, result: result + value);
+    if (opcode == 'acc') return part1(executed += [index], index: index + 1, result: result + int.parse(operation[1]));
     throw ArgumentError("unknown opcode for #$index -> ${operation}");
   }
 
-  int part2(List<int> executed, {int index: 0, int result: 0, int modOpCode: 1, int opCodeSeen: 0}) {
+  const flippable = ["jmp", "nop"];
+  int part2(List<int> executed, {int flipOpCode: 1}) {
+    var maxFlips = instr.where((instruction) => flippable.contains(instruction[0])).length;
+    if (flipOpCode > maxFlips) throw StateError("no more flips available");
+
+    int index = 0, result = 0, opcodeMatchedAtLineIndex = 0, opcodeSeenCount = 0;
     bool success = false;
-    int opcodeLineIndex = 0;
     do {
       executed += [index];
       if (index >= instr.length) {
-        print("succeeded on modding opcode #${modOpCode} at line#${opcodeLineIndex}");
+        print("succeeded on modding opcode #${flipOpCode} at line#${opcodeMatchedAtLineIndex}");
         success = true;
         break;
       }
-      var operation = instr[index].split(" ");
+      var operation = instr[index];
       var opcode = operation[0];
-      var value = int.parse(operation[1]);
-      if (["jmp", "nop"].contains(opcode)) {
-        opCodeSeen++;
-        if (opCodeSeen == modOpCode) {
-          opcodeLineIndex = index;
+      if (flippable.contains(opcode)) {
+        opcodeSeenCount++;
+        if (opcodeSeenCount == flipOpCode) {
+          opcodeMatchedAtLineIndex = index;
           opcode = opcode == "jmp" ? "nop" : "jmp";
         }
       }
-
-      if (opcode == "jmp") index += value;
+      if (opcode == "jmp") index += int.parse(operation[1]);
       if (opcode == "nop") index++;
       if (opcode == "acc") index++;
-      if (opcode == "acc") result += value;
+      if (opcode == "acc") result += int.parse(operation[1]);
       if (!['jmp', 'nop', 'acc'].contains(opcode)) throw ArgumentError("unknown opcode for #$index -> ${operation}");
     } while (!executed.contains(index));
 
-    if (!success) return part2([], modOpCode: modOpCode + 1);
+    if (!success) return part2([], flipOpCode: flipOpCode + 1);
     return result;
   }
 

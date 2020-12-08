@@ -5,7 +5,6 @@ import '../src/day8.dart';
 main() {
   group("day 8", () {
     group("part 1", () {
-
       test("informs of an error of parsing opcode", () {
         var processor = newProcessor();
 
@@ -115,10 +114,16 @@ main() {
         expect(result, equals(10));
       });
 
+      test("we have to have at least 1 opcode to flip", () {
+        var processor = newProcessor();
+
+        expect(() => processor.pt2(), throwsStateError);
+      });
+
       test("informs of an error of parsing opcode", () {
         var processor = newProcessor();
 
-        var lines = ["abc 4"];
+        var lines = ["abc 4", "nop 4"];
         lines.forEach(processor.callback);
 
         expect(() => processor.pt2(), throwsArgumentError);
@@ -170,6 +175,20 @@ main() {
         var result = processor.pt2();
 
         expect(result, equals(7));
+      });
+
+      test("if no opcode replacement will work, report error", () {
+        var processor = newProcessor();
+
+        var lines = [
+          "acc 5",
+          "nop -1",
+          "nop -2",
+          "acc 2",
+        ];
+        lines.forEach(processor.callback);
+
+        expect(() => processor.pt2(), throwsStateError);
       });
     });
   });
