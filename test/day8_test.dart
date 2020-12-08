@@ -4,7 +4,6 @@ import '../src/day8.dart';
 
 main() {
   group("day 8", () {
-
     group("part 1", () {
       test("no-op means do nothing", () {
         var processor = newProcessor();
@@ -28,7 +27,7 @@ main() {
         expect(result, equals(4));
       });
 
-      test("program exits when hit the end of statements", (){
+      test("program exits when hit the end of statements", () {
         var processor = newProcessor();
 
         var lines = ["acc 4"];
@@ -39,15 +38,15 @@ main() {
         expect(result, equals(4));
       });
 
-      test("jump will goto line", (){
+      test("jump will goto line", () {
         var processor = newProcessor();
 
         var lines = [
           "jmp +3", //  1
-          "acc 7",  //      3
-          "jmp 2",  //        4
+          "acc 7", //      3
+          "jmp 2", //        4
           "jmp -2", //    2
-          "acc 3"   //          5
+          "acc 3" //          5
         ];
         lines.forEach(processor.callback);
 
@@ -95,15 +94,47 @@ main() {
     });
 
     group("part 2", () {
-      test("dummy", () {
+      test("replaces the first jump with a nop", () {
         var processor = newProcessor();
 
-        var lines = [""];
+        var lines = ["acc 4", "jmp -1", "acc 6"];
         lines.forEach(processor.callback);
 
         var result = processor.pt2();
 
-        expect(result, equals(0));
+        expect(result, equals(10));
+      });
+
+      test("replaces the first nop with a jump", () {
+        var processor = newProcessor();
+
+        var lines = [
+          "acc 1",
+          "nop 2",
+          "jmp -1",
+          "acc 1",
+        ];
+        lines.forEach(processor.callback);
+
+        var result = processor.pt2();
+
+        expect(result, equals(2));
+      });
+
+      test("replaces the second nop with a jump", () {
+        var processor = newProcessor();
+
+        var lines = [
+          "acc 5",
+          "nop -1",
+          "nop 1",
+          "acc 2",
+        ];
+        lines.forEach(processor.callback);
+
+        var result = processor.pt2();
+
+        expect(result, equals(7));
       });
     });
   });
