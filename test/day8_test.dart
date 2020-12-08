@@ -136,6 +136,22 @@ main() {
 
         expect(result, equals(7));
       });
+
+      test("replaces the second jmp with a nop", () {
+        var processor = newProcessor();
+
+        var lines = [
+          "acc 5",
+          "nop -1",
+          "jump -2",
+          "acc 2",
+        ];
+        lines.forEach(processor.callback);
+
+        var result = processor.pt2();
+
+        expect(result, equals(7));
+      });
     });
   });
 }
