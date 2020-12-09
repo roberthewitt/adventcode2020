@@ -19,9 +19,7 @@ Processor processor9() {
     // print("searching for sum:$sum in $window from source:$lines ");
     var result = findTupleOf(window, 2, sum, []);
     if (result.isEmpty) return sum;
-    if (index + 1 + size >= lines.length) {
-      throw StateError("No match using window:${window} for sum: $sum");
-    }
+    if (index + 1 + size >= lines.length) throw StateError("No match using window:${window} for sum: $sum");
     return part1(index: index + 1, size: size);
   }
 
@@ -31,17 +29,9 @@ Processor processor9() {
     // print("attempting search for $sum with tupleSize: $tupleSize");
 
     for (int i = 0; i + tupleSize < lines.length; i++) {
-      var window = lines.sublist(i, tupleSize+i);
+      var window = lines.sublist(i, tupleSize + i);
 
-      if (window.isNotEmpty && sum == window.reduce((a, b) => a + b)) {
-        print("result : $window");
-        var smallest = window.reduce((a, b) => a < b ? a : b);
-        print("result smallest : ${smallest}");
-        var biggest = window.reduce((a, b) => a > b ? a : b);
-        print("result biggest  : ${biggest}");
-        print("result sum      : ${biggest + smallest}");
-        return window;
-      }
+      if (window.isNotEmpty && sum == window.reduce((a, b) => a + b)) return window;
     }
 
     if (tupleSize == lines.length - 1) {
@@ -70,7 +60,13 @@ main() {
 
       var processor_pt2 = processor9();
       readFileByLine(realData, processor_pt2.callback, onComplete: () {
-        print('<< part 2 >> result: ${processor_pt2.pt2(776203571)}');
+        var window = processor_pt2.pt2(776203571);
+        var smallest = window.reduce((a, b) => a < b ? a : b);
+        var biggest = window.reduce((a, b) => a > b ? a : b);
+        print('<< part 2 >> result window   : ${window}');
+        print("<< part 2 >> result smallest : ${smallest}");
+        print("<< part 2 >> result biggest  : ${biggest}");
+        print("<< part 2 >> result sum      : ${biggest + smallest}");
       });
     });
   });
