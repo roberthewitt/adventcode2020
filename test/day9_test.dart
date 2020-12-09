@@ -34,15 +34,5 @@ main() {
 
     });
 
-    group("part 2", () {
-      test("dummy", () {
-        var processor = processor9();
-
-        var lines = ["1"];
-        lines.forEach(processor.callback);
-
-        expect(processor.pt2(), equals(0));
-      });
-    });
   });
 }
