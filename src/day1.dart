@@ -24,7 +24,7 @@ Output newProcessor() {
     data.add((int.parse(line)));
   };
   output.findMatch = ({sum, size}) {
-    var result = find(data, size, sum, []);
+    var result = findTupleOf(data, size, sum, []);
     if (result.isEmpty) {
       return 'sum: $sum with size: $size: No Match';
     } else {
@@ -34,7 +34,7 @@ Output newProcessor() {
   return output;
 }
 
-List<int> find(List<int> source, int setSize, int sum, List<int> lockedIn) {
+List<int> findTupleOf(List<int> source, int setSize, int sum, List<int> lockedIn) {
   if (setSize == 1) {
     var lockedInSum = lockedIn.reduce((a, b) => a + b);
     var match = source.where((v) => v + lockedInSum == sum);
@@ -46,7 +46,7 @@ List<int> find(List<int> source, int setSize, int sum, List<int> lockedIn) {
       // give up this loop if we're already higher than sum
       if (newLockedIn.fold(0, (a, b) => a + b) >= sum) continue;
       List<int> others = source.sublist(i + 1);
-      var match = find(others, setSize - 1, sum, newLockedIn);
+      var match = findTupleOf(others, setSize - 1, sum, newLockedIn);
       if (match.isNotEmpty) return match;
     }
   }
