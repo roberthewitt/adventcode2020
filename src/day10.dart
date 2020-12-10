@@ -9,11 +9,28 @@ class Processor {
 Processor day10() {
   var output = Processor();
 
-  List<String> lines = [];
+  List<int> lines = [];
 
-  output.callback = lines.add;
+  output.callback = (input) => lines.add(int.parse(input));
 
-  output.pt1 = () => 0;
+  List<int> part1(List<int> input) {
+    input.sort();
+    input.add(input.last + 3);
+    int currentVoltage = 0;
+    return input.fold(List.filled(2, 0), (acc, value) {
+      var delta = value - currentVoltage;
+      if (delta == 1) acc[0] = acc[0] + 1;
+      if (delta == 3) acc[1] = acc[1] + 1;
+      currentVoltage = value;
+      return acc;
+    });
+  }
+
+  output.pt1 = () {
+    var result = part1([...lines]);
+    print(result);
+    return result[0] * result[1];
+  };
 
   output.pt2 = () => 0;
 
