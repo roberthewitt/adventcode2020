@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../utils.dart';
 
 class Processor {
@@ -17,10 +19,11 @@ Processor day10() {
     input.sort();
     input.add(input.last + 3);
     int currentVoltage = 0;
-    return input.fold(List.filled(2, 0), (acc, value) {
+    return input.fold(List.filled(3, 0), (acc, value) {
       var delta = value - currentVoltage;
       if (delta == 1) acc[0] = acc[0] + 1;
-      if (delta == 3) acc[1] = acc[1] + 1;
+      if (delta == 2) acc[1] = acc[1] + 1;
+      if (delta == 3) acc[2] = acc[2] + 1;
       currentVoltage = value;
       return acc;
     });
@@ -29,10 +32,49 @@ Processor day10() {
   output.pt1 = () {
     var result = part1([...lines]);
     print(result);
-    return result[0] * result[1];
+    return result[0] * result[2];
   };
 
-  output.pt2 = () => 0;
+  List<int> part2(List<int> input) {
+    input.sort();
+    input.add(input.last + 3);
+    int currentVoltage = 0;
+    List<int> result = List.filled(10, 0);
+    // number of 1's contiguous
+    input.fold(0, (acc, value) {
+      var delta = value - currentVoltage;
+      currentVoltage = value;
+
+      if (delta == 1) acc = acc + 1;
+      if (delta == 2) throw StateError("cry, delta 2");
+      if (delta == 3) {
+        acc = acc - 1;
+        if (acc > 0) {
+          result[acc] = result[acc] + 1;
+        }
+        acc = 0;
+      }
+      return acc;
+    });
+
+    return result;
+  }
+
+  output.pt2 = () {
+    var result = part2([...lines]);
+    print(result);
+    var ones = pow(2, result[1]);
+    var twos = pow(4, result[2]);
+    var threes = pow(7, result[3]);
+    print("by 1s = 2^1^(1s) = 2^(${result[1]}) = ${ones}");
+    print("by 2s = 2^2^(2s) = 4^(${result[2]}) = ${twos}");
+    print("by 3s = 7^(3s)   = 7^(${result[3]}) = ${threes}");
+
+    var finalResult = ones * twos * threes;
+    print("final result = ${finalResult}");
+
+    return finalResult;
+  };
 
   return output;
 }
