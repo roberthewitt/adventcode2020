@@ -71,15 +71,15 @@ main() {
   var testData = "data/day${day}_testData.txt";
 
   var processor_testData = newProcessor();
-  readFileByLine(testData, processor_testData.callback, onComplete: () {
+  readFileByLine(testData, processor_testData.callback, solve: () {
     print('<< test data result: ${processor_testData.pt1()}');
-
+  }, onComplete: () {
     var processor_pt1 = newProcessor();
-    readFileByLine(realData, processor_pt1.callback, onComplete: () {
+    readFileByLine(realData, processor_pt1.callback, solve: () {
       print('<< part 1 >> result: ${processor_pt1.pt1()}');
-
+    }, onComplete: () {
       var processor_pt2 = newProcessor();
-      readFileByLine(realData, processor_pt2.callback, onComplete: () {
+      readFileByLine(realData, processor_pt2.callback, solve: () {
         print('<< part 2 >> result: ${processor_pt2.pt2()}');
       });
     });

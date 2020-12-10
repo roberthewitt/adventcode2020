@@ -35,16 +35,14 @@ Processor newProcessor() {
       convertToNumber(line.substring(7, 10)),
       convertToNumber(line.substring(0, 7)),
     ));
-  };;
-  output.calculateMaxSeatId = () =>
-      seats.map(calcSeatId).reduce((a, b) => a > b ? a : b);
+  };
+  ;
+  output.calculateMaxSeatId = () => seats.map(calcSeatId).reduce((a, b) => a > b ? a : b);
   output.mySeat = () {
     List<Point<int>> missingSeats = [];
     void hasMissing(String columnId, List<String> seatIds) {
       for (int i = 1; i < seatIds.length - 1; i++) {
-        if (seatIds[i - 1] == "-" &&
-            seatIds[i] == "X" &&
-            seatIds[i + 1] == "-") {
+        if (seatIds[i - 1] == "-" && seatIds[i] == "X" && seatIds[i + 1] == "-") {
           missingSeats.add(Point(i, int.parse(columnId)));
         }
       }
@@ -52,8 +50,7 @@ Processor newProcessor() {
 
     Map<int, List<String>> data = {};
     seats.forEach((seat) {
-      if (data[seat.y] == null)
-        data[seat.y] = ["X", "X", "X", "X", "X", "X", "X", "X"];
+      if (data[seat.y] == null) data[seat.y] = ["X", "X", "X", "X", "X", "X", "X", "X"];
       List<String> row = data[seat.y];
       row[seat.x] = "-";
     });
@@ -82,19 +79,17 @@ Processor newProcessor() {
 
 main() {
   var processor_testData = newProcessor();
-  readFileByLine("data/day5_testData.txt", processor_testData.processLine,
-      onComplete: () {
-    print(
-        '<< test data highest seat: ${processor_testData.calculateMaxSeatId()}');
-  });
-
-  var processor_pt1 = newProcessor();
-  readFileByLine("data/day5.txt", processor_pt1.processLine, onComplete: () {
-    print('<< part 1 >> highest seat: ${processor_pt1.calculateMaxSeatId()}');
-  });
-
-  var processor_pt2 = newProcessor();
-  readFileByLine("data/day5.txt", processor_pt2.processLine, onComplete: () {
-    print('<< part 2 >> my seat: ${processor_pt2.mySeat()}');
+  readFileByLine("data/day5_testData.txt", processor_testData.processLine, solve: () {
+    print('<< part 1 >> ${processor_testData.calculateMaxSeatId()}');
+  }, onComplete: () {
+    var processor_pt1 = newProcessor();
+    readFileByLine("data/day5.txt", processor_pt1.processLine, solve: () {
+      print('<< part 1 >> ${processor_pt1.calculateMaxSeatId()}');
+    }, onComplete: () {
+      var processor_pt2 = newProcessor();
+      readFileByLine("data/day5.txt", processor_pt2.processLine, solve: () {
+        print('<< part 2 >> ${processor_pt2.mySeat()}');
+      });
+    });
   });
 }

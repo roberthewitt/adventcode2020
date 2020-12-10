@@ -202,7 +202,7 @@ Output newProcessor() {
 
 main() {
   var output = newProcessor();
-  readFileByLine("data/day4.txt", output.callback, onComplete: () {
+  readFileByLine("data/day4.txt", output.callback, solve: () {
     print('all passports: ${output.info.totalCount}');
     print('valid passports: ${output.info.validCount}');
   });

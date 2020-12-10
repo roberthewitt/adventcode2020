@@ -51,15 +51,15 @@ main() {
   var testData = "data/day${day}_testData.txt";
 
   var processor_testData = processor9();
-  readFileByLine(testData, processor_testData.callback, onComplete: () {
+  readFileByLine(testData, processor_testData.callback, solve: () {
     print('<< test data result: ${processor_testData.pt1(preamble: 5)}');
-
+  }, onComplete: () {
     var processor_pt1 = processor9();
-    readFileByLine(realData, processor_pt1.callback, onComplete: () {
+    readFileByLine(realData, processor_pt1.callback, solve: () {
       print('<< part 1 >> result: ${processor_pt1.pt1(preamble: 25)}');
-
+    }, onComplete: () {
       var processor_pt2 = processor9();
-      readFileByLine(realData, processor_pt2.callback, onComplete: () {
+      readFileByLine(realData, processor_pt2.callback, solve: () {
         var window = processor_pt2.pt2(776203571);
         var smallest = window.reduce((a, b) => a < b ? a : b);
         var biggest = window.reduce((a, b) => a > b ? a : b);

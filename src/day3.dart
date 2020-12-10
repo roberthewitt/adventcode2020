@@ -36,7 +36,7 @@ Processor newProcessor() {
 
 void main() {
   Processor processor = newProcessor();
-  readFileByLine("data/day3.txt", processor.callback, onComplete: () {
+  readFileByLine("data/day3.txt", processor.callback, solve: () {
     var result = [
       Point(1, 1),
       Point(3, 1),

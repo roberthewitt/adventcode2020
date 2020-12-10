@@ -20,18 +20,20 @@ Processor newProcessor() {
   String getPassword(String text) => text.split(":")[1].trim();
 
   processor.callback = lines.add;
-  processor.valid = (factory) =>
-      lines.where((v) => factory.build(v).isValid(getPassword(v))).length;
+  processor.valid = (factory) => lines.where((v) => factory.build(v).isValid(getPassword(v))).length;
 
   return processor;
 }
 
 void main() {
-  var processor = newProcessor();
-
-  readFileByLine("data/day2.txt", processor.callback, onComplete: () {
-    print('pt1 passwords that work: ${processor.valid(MaxMinFactory())}');
-    print('pt2 passwords that work: ${processor.valid(PositionFactory())}');
+  var pt1 = newProcessor();
+  readFileByLine("data/day2.txt", pt1.callback, solve: () {
+    print('pt1 passwords that work: ${pt1.valid(MaxMinFactory())}');
+  }, onComplete: () {
+    var pt2 = newProcessor();
+    readFileByLine("data/day2.txt", pt2.callback, solve: () {
+      print('pt2 passwords that work: ${pt2.valid(PositionFactory())}');
+    });
   });
 }
 
@@ -53,12 +55,7 @@ class PositionRule with PasswordChecker {
 
   @override
   bool isValid(String password) =>
-      atPosition
-          .map((e) => e - 1)
-          .map((e) => password.split("")[e])
-          .where((char) => char == character)
-          .length ==
-      1;
+      atPosition.map((e) => e - 1).map((e) => password.split("")[e]).where((char) => char == character).length == 1;
 }
 
 class MaxMinFactory with PasswordCheckerFactory {
