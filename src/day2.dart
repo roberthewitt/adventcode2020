@@ -44,8 +44,7 @@ class MaxMinRule with PasswordChecker {
   @override
   bool isValid(String password) {
     var count = password.split('').where((e) => e == character).length;
-    var valid = count >= minimum && count <= maximum;
-    return valid;
+    return count >= minimum && count <= maximum;
   }
 }
 
