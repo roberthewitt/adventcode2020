@@ -16,25 +16,31 @@ class EmptySeatRule with RuleProcessor {
   @override
   String processSpace(Point<num> coord, List<List<String>> grid) {
     var seat = grid[coord.y][coord.x];
+    if (seat == "L") {
 
-
+    }
 
     return seat;
   }
-
 }
 
-int part1 (List<List<String>> grid, {int iteration: 0}) {
-  for (int i = 0; i < grid.length; i++){
-    var row = grid[i];
-    for(int j = 0; j < row.length ; j++) {
-      var point = Point(i,j);
+int part1(List<List<String>> grid,
+    {int iteration: 0, List<RuleProcessor> rules}) {
+  List<List<String>> newGrid = List.filled(grid.length, List(grid[0].length));
 
+  for (int y = 0; y < grid.length; y++) {
+    var row = grid[y];
+    for (int x = 0; x < row.length; x++) {
+      var point = Point(x, y);
+      var currentValue = grid[y][x];
+      newGrid[y][x] = rules.fold<String>(currentValue, (acc, rule) {
+        return (acc == currentValue) ? rule.processSpace(point, grid) : acc;
+      });
     }
   }
 
   print("after iteration $iteration");
-  grid.forEach(print);
+  newGrid.forEach(print);
   return 0;
 }
 
@@ -45,7 +51,7 @@ Processor day11() {
 
   output.callback = (line) => lines.add(line.split(""));
 
-  output.pt1 = () => part1([...lines]);
+  output.pt1 = () => part1([...lines], rules: [EmptySeatRule()]);
 
   output.pt2 = () => 0;
 
