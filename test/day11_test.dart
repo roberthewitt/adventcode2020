@@ -5,16 +5,14 @@ import '../src/day11.dart';
 main() {
   group("day 11", () {
     group("part 1", () {
-      test("can fill seats", () {
+      test("flips all empty seats", () {
         var processor = day11();
 
         // 5x5 grid of seats
         var lines = [
-          "LLLLL",
-          "LLLLL",
-          "LLLLL",
-          "LLLLL",
-          "LLLLL",
+          "LLL",
+          "LLL",
+          "LLL",
         ];
         lines.forEach(processor.callback);
 
