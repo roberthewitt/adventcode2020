@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../utils.dart';
 
 class Processor {
@@ -6,14 +8,44 @@ class Processor {
   int Function() pt2;
 }
 
+mixin RuleProcessor {
+  String processSpace(Point coord, List<List<String>> grid);
+}
+
+class EmptySeatRule with RuleProcessor {
+  @override
+  String processSpace(Point<num> coord, List<List<String>> grid) {
+    var seat = grid[coord.y][coord.x];
+
+
+
+    return seat;
+  }
+
+}
+
+int part1 (List<List<String>> grid, {int iteration: 0}) {
+  for (int i = 0; i < grid.length; i++){
+    var row = grid[i];
+    for(int j = 0; j < row.length ; j++) {
+      var point = Point(i,j);
+
+    }
+  }
+
+  print("after iteration $iteration");
+  grid.forEach(print);
+  return 0;
+}
+
 Processor day11() {
   var output = Processor();
 
-  List<int> lines = [];
+  List<List<String>> lines = [];
 
-  output.callback = (input) => lines.add;
+  output.callback = (line) => lines.add(line.split(""));
 
-  output.pt1 = () => 0;
+  output.pt1 = () => part1([...lines]);
 
   output.pt2 = () => 0;
 
