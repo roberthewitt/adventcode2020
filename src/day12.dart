@@ -56,6 +56,8 @@ int part1Solution(List<String> orders) {
   int facing = 180;
 
   var newLocation = orders.fold<Point>(Point(0, 0), (acc, order) {
+    // var oldFacing = facing;
+    // var oldAcc = acc;
     String direction = order.substring(0, 1);
     int magnitude = int.parse(order.substring(1, order.length));
 
@@ -66,8 +68,10 @@ int part1Solution(List<String> orders) {
     if (direction == SOUTH) acc += Point(0, -magnitude);
     if (direction == EAST) acc += Point(-magnitude, 0);
     if (direction == WEST) acc += Point(magnitude, 0);
-    if (direction == LEFT) facing += magnitude;
-    if (direction == RIGHT) facing -= magnitude;
+    if (direction == LEFT) facing = (facing + magnitude) % 360;
+    if (direction == RIGHT) facing = (facing - magnitude < 0) ? 360 + (facing - magnitude) : facing - magnitude;
+
+    // print("facing: $oldFacing -> $facing :: location : $oldAcc -> $acc");
 
     return acc;
   });

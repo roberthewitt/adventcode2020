@@ -5,44 +5,46 @@ import '../src/day12.dart';
 main() {
   group("day 11", () {
     group("part 1", () {
-
       test("moving forwards 5, then east 5 should equal 10", () {
         var processor = day12();
 
-        var lines = [
-          "F5",
-          "E5",
-        ];
+        var lines = ["F5", "E5"];
         lines.forEach(processor.callback);
 
         expect(processor.pt1(), equals(10));
-
       });
 
       test("moving forwards 5, then west 5 should equal 0", () {
         var processor = day12();
 
-        var lines = [
-          "F5",
-          "W5",
-        ];
+        var lines = ["F5", "W5"];
         lines.forEach(processor.callback);
 
         expect(processor.pt1(), equals(0));
-
       });
 
+      test("go R270 then forward is north", () {
+        var processor = day12();
+
+        var lines = ["R270", "F1", "S1"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt1(), equals(0));
+      });
+
+      test("go L270 then forward is south", () {
+        var processor = day12();
+
+        var lines = ["L270", "F1", "N1"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt1(), equals(0));
+      });
 
       test("test data", () {
         var processor = day12();
 
-        var lines = [
-          "F10",
-          "N3",
-          "F7",
-          "R90",
-          "F11",
-        ];
+        var lines = ["F10", "N3", "F7", "R90", "F11"];
         lines.forEach(processor.callback);
 
         expect(processor.pt1(), equals(25));
