@@ -19,6 +19,19 @@ main() {
 
       });
 
+      test("moving forwards 5, then west 5 should equal 0", () {
+        var processor = day12();
+
+        var lines = [
+          "F5",
+          "W5",
+        ];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt1(), equals(0));
+
+      });
+
 
       test("test data", () {
         var processor = day12();

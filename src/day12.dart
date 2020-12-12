@@ -66,8 +66,8 @@ int part1Solution(List<String> orders) {
     if (direction == SOUTH) acc += Point(0, -magnitude);
     if (direction == EAST) acc += Point(-magnitude, 0);
     if (direction == WEST) acc += Point(magnitude, 0);
-    if (direction == LEFT) facing -= magnitude;
-    if (direction == RIGHT) facing += magnitude;
+    if (direction == LEFT) facing += magnitude;
+    if (direction == RIGHT) facing -= magnitude;
 
     return acc;
   });
