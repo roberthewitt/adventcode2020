@@ -52,13 +52,14 @@ main() {
     });
 
     group("part 2", () {
+
       test("test data", () {
         var processor = day12();
 
-        var lines = [];
+        var lines = ["F10", "N3", "F7", "R90", "F11"];
         lines.forEach(processor.callback);
 
-        expect(processor.pt2(), equals(0));
+        expect(processor.pt2(), equals(286));
       });
     });
   });

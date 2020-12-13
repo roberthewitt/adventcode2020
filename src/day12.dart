@@ -5,7 +5,7 @@ import '../utils.dart';
 class Processor {
   Function(String) callback;
   int Function() pt1;
-  int Function() pt2;
+  int Function({Point<int> origin, Point<int> waypoint}) pt2;
 }
 
 Processor day12() {
@@ -17,7 +17,8 @@ Processor day12() {
 
   output.pt1 = () => part1Solution([...lines]);
 
-  output.pt2 = () => 0;
+  output.pt2 =
+      ({origin: const Point(0, 0), waypoint: const Point(-10, 1)}) => part2Solution([...lines], origin, waypoint);
 
   return output;
 }
@@ -72,6 +73,46 @@ int part1Solution(List<String> orders) {
     if (direction == RIGHT) facing = (facing - magnitude < 0) ? 360 + (facing - magnitude) : facing - magnitude;
 
     // print("facing: $oldFacing -> $facing :: location : $oldAcc -> $acc");
+
+    return acc;
+  });
+
+  var manhattan = newLocation.x.abs() + newLocation.y.abs();
+
+  print("New Location : $newLocation");
+
+  return manhattan;
+}
+
+int part2Solution(List<String> orders, Point<int> origin, Point<int> waypoint) {
+  var newLocation = orders.fold<Point>(origin, (acc, order) {
+    // var oldWaypoint = waypoint;
+    // var oldAcc = acc;
+    String direction = order.substring(0, 1);
+    int magnitude = int.parse(order.substring(1, order.length));
+
+    if (direction == FORWARDS) acc += (waypoint * magnitude);
+    if (direction == BACKWARDS) acc -= (waypoint * magnitude);
+
+    if (direction == NORTH) waypoint += Point(0, magnitude);
+    if (direction == SOUTH) waypoint += Point(0, -magnitude);
+    if (direction == EAST) waypoint += Point(-magnitude, 0);
+    if (direction == WEST) waypoint += Point(magnitude, 0);
+
+    if (direction == LEFT) {
+      while (magnitude > 0) {
+        magnitude -= 90;
+        waypoint = Point(waypoint.y, waypoint.x * -1);
+      }
+    }
+    if (direction == RIGHT) {
+      while (magnitude > 0) {
+        magnitude -= 90;
+        waypoint = Point(waypoint.y * -1, waypoint.x);
+      }
+    }
+
+    // print("$order => waypoint: $oldWaypoint -> $waypoint :: location : $oldAcc -> $acc");
 
     return acc;
   });
