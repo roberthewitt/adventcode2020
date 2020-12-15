@@ -9,19 +9,20 @@ class Processor {
 Processor day13() {
   var output = Processor();
 
-  Iterable<int> busIds = [];
+  List<int> busIds = [];
   int departureTimestamp = 0;
 
   output.callback = (line) {
     if (departureTimestamp == 0) {
       departureTimestamp = int.parse(line);
     } else {
-      busIds = line.split(",").where((e) => e != "x").map(int.parse);
+      busIds = line.split(",").map((e) => e == "x" ? "-1" : e).map(int.parse).toList();
     }
   };
 
   output.pt1 = () {
     var quickestTime = busIds
+        .where((e) => e != -1)
         .fold<Map<int, int>>({}, (acc, busId) {
           acc[busId] = busTimeAfter(busId: busId, target: departureTimestamp, current: 0);
           return acc;
@@ -38,9 +39,32 @@ Processor day13() {
     return (quickestTime[1] - departureTimestamp) * quickestTime[0];
   };
 
-  output.pt2 = () => 0;
+  output.pt2 = () {
+    var maxIndex = 0;
+    var maxValue = 0;
+    for (var i = 0; i < busIds.length; i++) {
+      if (busIds[0] > maxValue) {
+        maxValue = busIds[i];
+        maxIndex = i;
+      }
+    }
+
+    var currentTimestamp = maxValue - maxIndex;
+    while (!worksFor(timestamp: currentTimestamp, busList: busIds)) currentTimestamp += maxValue;
+
+    return currentTimestamp;
+  };
 
   return output;
+}
+
+bool worksFor({int timestamp, List<int> busList}) {
+  // print("checking timestamp: $timestamp");
+  for (var i = 1; i < busList.length; i++) {
+    if (busList[i] == -1) continue;
+    if (((timestamp + i) % busList[i]) != 0) return false;
+  }
+  return true;
 }
 
 main() {

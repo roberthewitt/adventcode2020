@@ -63,6 +63,55 @@ main() {
       //
       //   expect(processor.pt2(), equals(0));
       // });
+
+      test("can find earliest timestamp using 2 numbers", () {
+        var processor = day13();
+
+        var lines = ["6", "5,11"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt2(), equals(10));
+      });
+
+      test("example set from internet 1", () {
+        var processor = day13();
+
+
+        var lines = ["6", "67,7,59,61"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt2(), equals(754018));
+      });
+
+      test("example set from internet 2 (testing ignoring of x)", () {
+        var processor = day13();
+
+
+        var lines = ["6", "67,x,7,59,61"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt2(), equals(779210));
+      });
+
+      test("example set from internet 3", () {
+        var processor = day13();
+
+
+        var lines = ["6", "67,7,x,59,61"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt2(), equals(1261476));
+      });
+
+      test("example set from internet 4", () {
+        var processor = day13();
+
+
+        var lines = ["6", "1789,37,47,1889"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt2(), equals(1202161486));
+      });
     });
   });
 }
