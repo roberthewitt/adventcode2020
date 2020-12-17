@@ -13,6 +13,20 @@ main() {
       //
       //   expect(processor.pt1(), equals(0));
       // });
+
+      test("test example", () {
+        var processor = day14();
+
+        var lines = [
+          "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
+          "mem[8] = 11",
+          "mem[7] = 101",
+          "mem[8] = 0",
+        ];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt1(), equals(165));
+      });
     });
 
     group("part 2", () {
