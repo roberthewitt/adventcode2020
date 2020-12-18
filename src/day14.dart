@@ -49,7 +49,29 @@ Processor day14() {
   };
 
   output.pt2 = () {
-    return 0;
+    List<dynamic> masks = List(36);
+    Map<int, int> memory = {};
+
+    input.forEach((line) {
+      if (line.startsWith("mask")) {
+        var mask = line.split("mask = ")[1].trim();
+        for (int i = 0; i < mask.length; i++) {
+          var value = mask.substring(i, i + 1);
+          if (value == "1") masks[i] = 1;
+          if (value == "X") masks[i] = "X";
+          if (value == "0") masks[i] = 0;
+        }
+      } else {
+        int memoryAddress = int.parse(line.substring(4, line.indexOf("]")));
+        int number = int.parse(line.substring(line.indexOf("=") + 1).trim());
+
+
+        Iterable<int> positions = getMemoryPositions(memoryAddress, masks);
+        for (var position in positions) memory[position] = number;
+      }
+    });
+
+    return memory.values.fold(0, (acc, val) => acc + val);
   };
 
   return output;
@@ -77,6 +99,27 @@ main() {
 }
 
 String maskToString(List<dynamic> masks) => masks.fold("", (acc, e) => acc + e.toString());
+
+Iterable<int> getMemoryPositions(int memoryAddress, List<dynamic> masks) {
+  String binaryAddress = memoryAddress.toRadixString(2).padLeft(36, "0");
+
+  List<String> binaryAddresses = [""];
+  for (int i = 0; i < 36; i++ ) {
+    var val = binaryAddress[i];
+    var maskVal = masks[i];
+    if (maskVal == 1) {
+      binaryAddresses = binaryAddresses.map((e) => e + "1").toList();
+    } else if (maskVal == 0) {
+      binaryAddresses = binaryAddresses.map((e) => e + val).toList();
+    } else {
+      var ones = binaryAddresses.map((e) => e + "1").toList();
+      var zers = binaryAddresses.map((e) => e + "0").toList();
+      binaryAddresses = ones + zers;
+    }
+  }
+
+  return binaryAddresses.map((e) => int.parse(e, radix: 2));
+}
 
 String applyMask(String binaryString, List<dynamic> masks) {
   var a = binaryString.split("");
