@@ -13,32 +13,11 @@ Processor day15() {
 
   output.callback = input.add;
 
-  output.pt1 = () {
-    List<int> valuesSpoken = [];
-    var initialValues = input[0].split(",");
-    for (var initial in initialValues) valuesSpoken.add(int.parse(initial));
+  output.pt1 = () => calculate(input[0], 2020);
 
-    while (valuesSpoken.length != 2020) valuesSpoken = calculateNext(valuesSpoken);
-
-    return valuesSpoken.last;
-  };
-
-  output.pt2 = () {
-    return 0;
-  };
+  output.pt2 = () => calculate(input[0], 30000000);
 
   return output;
-}
-
-List<int> calculateNext(List<int> current) {
-  var target = current.last;
-  if (current.where((e) => e == target).length == 1) return [...current, 0];
-
-  for (int i = current.length - 2; i >= 0; i--) {
-    if (current[i] == target) {
-      return [...current, current.length -1 - i];
-    }
-  }
 }
 
 main() {
@@ -60,6 +39,39 @@ main() {
       });
     });
   });
+}
+
+int calculate(String initial, int target) {
+  List<int> initialValues = initial.split(",").map((e) => int.parse(e)).toList();
+  int turn = 0;
+
+  Map<int, int> lastSpokenAt = {};
+  Map<int, int> spokenCount = {};
+
+  for (int i = 0; i < initialValues.length; i++) {
+    turn++;
+
+    var value = initialValues[i];
+    if (i != initialValues.length - 1) lastSpokenAt[value] = turn;
+    if (!spokenCount.containsKey(value)) spokenCount[value] = 0;
+    spokenCount[value] = 1 + spokenCount[value];
+  }
+
+  turn++;
+
+  int lastSpoken = initialValues.last;
+  for (; turn != (target + 1); turn++) {
+    int current = 0;
+    if ((spokenCount[lastSpoken] ?? 0) > 1) {
+      current = turn - 1 - lastSpokenAt[lastSpoken];
+    }
+
+    lastSpokenAt[lastSpoken] = turn - 1;
+    spokenCount[current] = (spokenCount[current] ?? 0) + 1;
+    lastSpoken = current;
+  }
+
+  return lastSpoken;
 }
 
 void log(dynamic any) {

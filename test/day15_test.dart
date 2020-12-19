@@ -53,6 +53,15 @@ main() {
       //   expect(processor.pt2(), equals(0));
       // });
 
+      test("Given 0,3,6, the 30000000th number spoken is 175594.", () {
+        var processor = day15();
+
+        var lines = ["0,3,6"];
+        lines.forEach(processor.callback);
+
+        expect(processor.pt2(), equals(175594));
+      });
+
     });
   });
 }
